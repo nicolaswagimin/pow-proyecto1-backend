@@ -16,6 +16,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "^2.16.0",
     "@connectrpc/connect": "^2.2.0",
+    "@connectrpc/connect-node": "^2.2.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.5",
