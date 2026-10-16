@@ -10,6 +10,7 @@ import { limiteIA } from './middleware/limites.js';
 import authRouter from './routes/auth.js';
 import itemsRouter from './routes/items.js';
 import iaRouter from './routes/ia.js';
+import { interceptorAuth, interceptorLimite } from './grpc/interceptores.js';
 import { rutasGrpc } from './grpc/rutas.js';
 import { crearServidor } from './servidor.js';
 
@@ -73,6 +74,8 @@ app.use((err, req, res, next) => {
 // sigue a Express (REST). El servidor acepta HTTP/1.1 y HTTP/2 en el mismo puerto.
 const manejador = connectNodeAdapter({
   routes: rutasGrpc({}),
+  // Primero se autentica y después se aplica el límite por usuario.
+  interceptors: [interceptorAuth(), interceptorLimite()],
   fallback: app,
 });
 
