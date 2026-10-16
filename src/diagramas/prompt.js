@@ -28,3 +28,25 @@ Reglas:
 - No inventes piezas que no estén en el código.
 - Escribe los textos en español.
 `.trim();
+
+import { protoAJson, tipoAJson } from './convertir.js';
+
+export function construirPrompt({ archivos, tipo, pregunta, anterior }) {
+  const partes = [`Tipo de diagrama: ${tipoAJson(tipo)}.`];
+  partes.push(
+    pregunta?.trim()
+      ? `Pregunta que debe responder el diagrama: ${pregunta.trim()}`
+      : 'No hay pregunta: muestra la estructura principal del código.',
+  );
+  if (anterior) {
+    partes.push(
+      'Diagrama anterior del mismo código. Reutiliza sus ids para todo lo que no cambió, ' +
+        'así el usuario ve solo los cambios reales:\n' +
+        JSON.stringify(protoAJson(anterior)),
+    );
+  }
+  for (const archivo of archivos) {
+    partes.push(`--- archivo: ${archivo.name} ---\n${archivo.content}`);
+  }
+  return partes.join('\n\n');
+}
