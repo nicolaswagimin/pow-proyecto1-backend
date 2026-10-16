@@ -170,3 +170,15 @@ message DeleteDiagramRequest {
 }
 
 message DeleteDiagramResponse {}
+
+// Servicio de diagramas. Todas las llamadas exigen el JWT en el metadato "authorization".
+service DiagramService {
+  // Genera un diagrama validado a partir del código.
+  rpc GenerateDiagram(GenerateDiagramRequest) returns (GenerateDiagramResponse);
+  // Igual que GenerateDiagram, pero envía el progreso y, si hay diagrama anterior, el diff.
+  rpc StreamDiagram(StreamDiagramRequest) returns (stream StreamDiagramResponse);
+  rpc SaveDiagram(SaveDiagramRequest) returns (SaveDiagramResponse);
+  rpc ListDiagrams(ListDiagramsRequest) returns (ListDiagramsResponse);
+  rpc GetDiagram(GetDiagramRequest) returns (GetDiagramResponse);
+  rpc DeleteDiagram(DeleteDiagramRequest) returns (DeleteDiagramResponse);
+}
