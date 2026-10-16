@@ -38,3 +38,4 @@ CREATE TABLE IF NOT EXISTS diagramas (
   creado_en      TIMESTAMP DEFAULT NOW(),
   actualizado_en TIMESTAMP DEFAULT NOW()
 );
+CREATE INDEX IF NOT EXISTS diagramas_usuario_id_idx ON diagramas (usuario_id, creado_en DESC);
