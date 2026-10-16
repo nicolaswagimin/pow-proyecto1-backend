@@ -159,3 +159,14 @@ test('llamarGeminiJson con error HTTP falla con Unavailable', async () => {
     return true;
   });
 });
+
+test('llamarGeminiJson corta si Gemini no responde a tiempo', async () => {
+  process.env.GEMINI_API_KEY = 'clave-de-prueba';
+  const fetchImpl = (url, { signal }) =>
+    new Promise((_, rechazar) => signal.addEventListener('abort', () => rechazar(signal.reason)));
+  await assert.rejects(llamarGeminiJson({ sistema: 'S', usuario: 'U', fetchImpl, tiempoMaximoMs: 20 }), (err) => {
+    assert.equal(err.code, Code.Unavailable);
+    assert.match(err.rawMessage, /tardó demasiado/);
+    return true;
+  });
+});
