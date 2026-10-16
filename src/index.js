@@ -5,10 +5,7 @@ import { connectNodeAdapter } from '@connectrpc/connect-node';
 import { cors as connectCors } from '@connectrpc/connect';
 import { iniciarDB, dbDisponible } from './db.js';
 import { iaDisponible } from './ia.js';
-import { requireAuth } from './middleware/auth.js';
-import { limiteIA } from './middleware/limites.js';
 import authRouter from './routes/auth.js';
-import iaRouter from './routes/ia.js';
 import { interceptorAuth, interceptorLimite } from './grpc/interceptores.js';
 import { rutasGrpc } from './grpc/rutas.js';
 import { crearServicioDiagramas } from './grpc/servicio.js';
@@ -52,7 +49,6 @@ app.get('/api/health', async (req, res) => {
 app.use('/api/auth', authRouter);
 
 // ---------- Rutas protegidas ----------
-app.use('/api/ia', requireAuth, limiteIA, iaRouter);
 
 // ---------- Errores ----------
 app.use('/api', (req, res) => {
