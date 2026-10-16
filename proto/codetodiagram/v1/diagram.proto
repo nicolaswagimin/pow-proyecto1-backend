@@ -1,0 +1,40 @@
+// Contrato del servicio de diagramas de CodeToDiagram.
+// Fuente única: este archivo. El frontend tiene una copia idéntica (npm run proto:sync).
+syntax = "proto3";
+
+package codetodiagram.v1;
+
+// Tipo de diagrama. Para agregar uno nuevo (flujo de trabajo, flujo de datos, ciclo de vida)
+// basta con un valor más aquí, un layout y un componente en el frontend.
+enum DiagramType {
+  DIAGRAM_TYPE_UNSPECIFIED = 0;
+  DIAGRAM_TYPE_ARCHITECTURE = 1;
+  DIAGRAM_TYPE_SEQUENCE = 2;
+}
+
+// Forma C4 con la que se dibuja cada nodo.
+enum NodeCategory {
+  NODE_CATEGORY_UNSPECIFIED = 0;
+  NODE_CATEGORY_PERSON = 1;
+  NODE_CATEGORY_COMPONENT = 2;
+  NODE_CATEGORY_CONTAINER = 3;
+  NODE_CATEGORY_DATABASE = 4;
+  NODE_CATEGORY_EXTERNAL = 5;
+}
+
+// Qué le pasó a un nodo o conexión entre dos versiones del diagrama.
+enum ChangeKind {
+  CHANGE_KIND_UNSPECIFIED = 0;
+  CHANGE_KIND_ADDED = 1;
+  CHANGE_KIND_REMOVED = 2;
+  CHANGE_KIND_MODIFIED = 3;
+}
+
+// Etapas que el servidor reporta mientras genera un diagrama.
+enum ProgressStage {
+  PROGRESS_STAGE_UNSPECIFIED = 0;
+  PROGRESS_STAGE_ANALYZING = 1;
+  PROGRESS_STAGE_VALIDATING = 2;
+  PROGRESS_STAGE_RETRYING = 3;
+  PROGRESS_STAGE_DONE = 4;
+}
