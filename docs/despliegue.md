@@ -34,12 +34,25 @@ Crea una en <https://aistudio.google.com/apikey>. Puede ser la misma para los tr
 
 No definas `PORT`: Render lo asigna.
 
+El servicio de diagramas (gRPC) **no necesita variables nuevas**: usa las mismas que REST. Tampoco hace falta ejecutar Buf en Render, porque el código generado (`src/gen/`) está en el repositorio.
+
 4. Despliega y abre `https://pow-proyecto1-backend.onrender.com/api/health`. Debe responder `{"ok":true,"db":true,"ia":true}`.
-5. Esa URL más `/api` es la que usa `src/environments/environment.ts` del frontend.
+5. Esa URL más `/api` es la que usa `src/environments/environment.ts` del frontend para REST (`apiUrl`), y la URL sola, sin `/api`, es la del servicio gRPC-Web (`grpcUrl`).
+
+### Redespliegue automático
+
+Cada `git push` a `main` vuelve a desplegar el servicio. Antes de hacer push con una variable de entorno nueva, agrégala primero en **Environment**; si no, el servicio arranca sin ella.
 
 ## 4. Conectar CORS
 
 Cuando Vercel te dé la URL del frontend, ponla en `FRONTEND_URL` y guarda. Render vuelve a desplegar solo.
+
+## gRPC detrás del proxy de Render
+
+Render termina TLS en su proxy y reenvía a la app por HTTP/1.1:
+
+- **gRPC-Web** (lo que usa el frontend) viaja sobre HTTP/1.1, así que funciona, también el streaming de `StreamDiagram`.
+- **gRPC puro** necesita HTTP/2 de punta a punta y no llega a la app a través del proxy. Se demuestra en local con `buf curl --protocol grpc --http2-prior-knowledge` (ver [grpc.md](grpc.md)).
 
 ## Comprobaciones
 
@@ -49,7 +62,8 @@ Cuando Vercel te dé la URL del frontend, ponla en `FRONTEND_URL` y guarda. Rend
 | `/api/health` responde `"db": false` | `DATABASE_URL` mal copiada, o `DB_SSL=false` con Neon |
 | `/api/health` responde `"ia": false` | Falta `GEMINI_API_KEY` |
 | El frontend dice "No hay conexión con el backend" pero `/api/health` funciona en el navegador | El origen de Vercel no está en `FRONTEND_URL` (CORS) |
-| La primera petición tarda unos 50 s | El plan gratuito de Render duerme el servicio tras un rato sin uso; el frontend avisa "El servidor está despertando" |
+| La primera petición tarda unos 50 s | El plan gratuito de Render duerme el servicio tras un rato sin uso; el frontend avisa "El servidor está despertando" y reintenta 3 veces |
+| El diagrama falla con un error de CORS en la consola | El origen del frontend no está en `FRONTEND_URL` (las rutas gRPC usan la misma lista) |
 
 ## En local
 
