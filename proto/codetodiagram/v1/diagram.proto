@@ -72,3 +72,19 @@ message Diagram {
   repeated Node nodes = 4;
   repeated Edge edges = 5;
 }
+
+message Change {
+  string id = 1;
+  ChangeKind kind = 2;
+}
+
+// Diferencias entre el diagrama anterior y el nuevo.
+message DiagramDiff {
+  repeated Change nodes = 1;
+  repeated Change edges = 2;
+}
+
+message Progress {
+  ProgressStage stage = 1;
+  string message = 2;
+}
