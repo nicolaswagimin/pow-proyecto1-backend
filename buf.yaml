@@ -1,0 +1,10 @@
+# Configuración de Buf: el contrato gRPC vive en proto/ y se revisa con las reglas estándar.
+version: v2
+modules:
+  - path: proto
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE
