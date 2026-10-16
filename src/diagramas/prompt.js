@@ -1,3 +1,5 @@
+import { protoAJson, tipoAJson } from './convertir.js';
+
 // Texto que recibe Gemini. Se documenta en docs/ia.md: si lo cambias, actualiza ese archivo.
 
 export const INSTRUCCIONES_DIAGRAMA = `
@@ -28,8 +30,6 @@ Reglas:
 - No inventes piezas que no estén en el código.
 - Escribe los textos en español.
 `.trim();
-
-import { protoAJson, tipoAJson } from './convertir.js';
 
 export function construirPrompt({ archivos, tipo, pregunta, anterior }) {
   const partes = [`Tipo de diagrama: ${tipoAJson(tipo)}.`];
