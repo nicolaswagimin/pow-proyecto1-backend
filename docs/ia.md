@@ -25,6 +25,9 @@ Código: `src/diagramas/` (`prompt.js`, `generar.js`, `validar.js`, `esquema.js`
 - `generationConfig`: `responseMimeType: "application/json"` y `temperature: 0.2` (respuestas estables entre ediciones).
 - La API key solo vive en el backend (`GEMINI_API_KEY`). Si falta, el servicio responde `failed_precondition`.
 - Si el usuario sigue escribiendo y el frontend cancela la llamada, la señal de cancelación llega hasta el `fetch` a Gemini.
+- Si Gemini no responde en 60 s, la llamada se corta y el servicio responde `unavailable` con "La IA tardó demasiado en responder. Inténtalo de nuevo."
+- Si todos los archivos están vacíos, no se llama a Gemini (`invalid_argument`).
+- El modelo por defecto, `gemini-2.5-flash`, puede responder "high demand" en horas de mucho uso. Se cambia con `GEMINI_MODEL` (por ejemplo `gemini-3.5-flash-lite`) sin tocar el código.
 
 ## El prompt
 
