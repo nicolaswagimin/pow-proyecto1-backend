@@ -17,6 +17,12 @@ const MENSAJES_PROGRESO = {
   [ProgressStage.DONE]: 'Listo.',
 };
 
+// El diagrama anterior llega del cliente: si no pasa la validación (por ejemplo, es enorme),
+// no se manda a Gemini ni se usa para el diff.
+function previoValido(previo) {
+  return previo && validarDiagrama(protoAJson(previo)).ok ? previo : undefined;
+}
+
 const usuarioDe = (ctx) => ctx.values.get(USUARIO).id;
 
 const noEncontrado = () => new ConnectError('Ese diagrama no existe o no es tuyo.', Code.NotFound);
@@ -44,7 +50,13 @@ export function crearServicioDiagramas({ generar = generarDiagrama, repo = repos
     async generateDiagram(req, ctx) {
       validarEntrada(req);
       const diagram = await generar(
-        { archivos: req.files, tipo: req.type, pregunta: req.question, anterior: req.previous, signal: ctx.signal },
+        {
+          archivos: req.files,
+          tipo: req.type,
+          pregunta: req.question,
+          anterior: previoValido(req.previous),
+          signal: ctx.signal,
+        },
         {},
       );
       return { diagram };
@@ -53,12 +65,13 @@ export function crearServicioDiagramas({ generar = generarDiagrama, repo = repos
     // Envía cada etapa apenas ocurre, después el diagrama y, si había uno anterior, el diff.
     async *streamDiagram(req, ctx) {
       validarEntrada(req);
+      const previo = previoValido(req.previous);
       const cola = [];
       let avisar = () => {};
       let terminado = false;
 
       const tarea = generar(
-        { archivos: req.files, tipo: req.type, pregunta: req.question, anterior: req.previous, signal: ctx.signal },
+        { archivos: req.files, tipo: req.type, pregunta: req.question, anterior: previo, signal: ctx.signal },
         {
           alProgreso: (stage) => {
             cola.push(progreso(stage));
@@ -78,8 +91,8 @@ export function crearServicioDiagramas({ generar = generarDiagrama, repo = repos
 
       const diagram = await tarea;
       yield { event: { case: 'diagram', value: diagram } };
-      if (req.previous) {
-        yield { event: { case: 'diff', value: calcularDiff(req.previous, diagram) } };
+      if (previo) {
+        yield { event: { case: 'diff', value: calcularDiff(previo, diagram) } };
       }
       yield progreso(ProgressStage.DONE);
     },
