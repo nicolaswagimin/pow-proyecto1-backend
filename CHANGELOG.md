@@ -22,6 +22,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 - Rutas `/api/items` (CRUD de ejemplo) y `/api/ia` (preguntas de texto libre), con su límite. La tabla `items` deja de crearse pero no se borra.
 
 ### Corregido
+- Los mensajes gRPC se limitan a 256 KB: antes Connect aceptaba hasta 4 GB antes de autenticar.
+- Generar con todos los archivos vacíos responde `invalid_argument` sin llamar a Gemini.
+- Un `previous` inválido se descarta en vez de llegar al prompt.
+- La llamada a Gemini se corta a los 60 s.
 - Las fechas de `diagramas` usan `TIMESTAMPTZ`: con `TIMESTAMP` el historial mostraba 5 horas de diferencia.
 
 ### Documentación
