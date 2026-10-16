@@ -12,6 +12,7 @@ import itemsRouter from './routes/items.js';
 import iaRouter from './routes/ia.js';
 import { interceptorAuth, interceptorLimite } from './grpc/interceptores.js';
 import { rutasGrpc } from './grpc/rutas.js';
+import { crearServicioDiagramas } from './grpc/servicio.js';
 import { crearServidor } from './servidor.js';
 
 const PORT = process.env.PORT || 3001;
@@ -73,7 +74,7 @@ app.use((err, req, res, next) => {
 // gRPC, gRPC-Web y Connect atienden las rutas /codetodiagram.v1.DiagramService/*; todo lo demás
 // sigue a Express (REST). El servidor acepta HTTP/1.1 y HTTP/2 en el mismo puerto.
 const manejador = connectNodeAdapter({
-  routes: rutasGrpc({}),
+  routes: rutasGrpc(crearServicioDiagramas()),
   // Primero se autentica y después se aplica el límite por usuario.
   interceptors: [interceptorAuth(), interceptorLimite()],
   fallback: app,
