@@ -23,6 +23,7 @@ export function validarDiagrama(valor) {
     ...revisarCantidad(diagrama),
     ...revisarIds(diagrama),
     ...revisarConexiones(diagrama),
+    ...revisarOrden(diagrama),
   ];
   return errores.length ? { ok: false, errores } : { ok: true, diagrama };
 }
@@ -90,4 +91,15 @@ function revisarConexiones(diagrama) {
     }
   }
   return errores;
+}
+
+// En secuencia, el orden de los mensajes es lo que se dibuja de arriba abajo.
+function revisarOrden(diagrama) {
+  if (diagrama.tipo !== 'secuencia') return [];
+  return diagrama.conexiones
+    .filter((conexion) => !(conexion.orden >= 1))
+    .map(
+      (conexion) =>
+        `En un diagrama de secuencia, la conexión "${conexion.id}" necesita un orden (1 o más).`,
+    );
 }
