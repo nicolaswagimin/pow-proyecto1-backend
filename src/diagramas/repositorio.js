@@ -23,3 +23,11 @@ export async function listar(usuarioId) {
   );
   return rows;
 }
+
+export async function obtener(usuarioId, id) {
+  const { rows } = await pool.query(
+    `SELECT ${COLUMNAS} FROM diagramas WHERE usuario_id = $1 AND id = $2`,
+    [usuarioId, id],
+  );
+  return rows[0] ?? null;
+}
