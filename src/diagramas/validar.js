@@ -22,6 +22,7 @@ export function validarDiagrama(valor) {
     ...revisarTipoYCategorias(diagrama),
     ...revisarCantidad(diagrama),
     ...revisarIds(diagrama),
+    ...revisarConexiones(diagrama),
   ];
   return errores.length ? { ok: false, errores } : { ok: true, diagrama };
 }
@@ -69,6 +70,23 @@ function revisarIds(diagrama) {
       }
       if (vistos.has(id)) errores.push(`El id "${id}" está repetido.`);
       vistos.add(id);
+    }
+  }
+  return errores;
+}
+
+// Ninguna conexión puede apuntar a un nodo inventado ni unir un nodo consigo mismo.
+function revisarConexiones(diagrama) {
+  const ids = new Set(diagrama.nodos.map((nodo) => nodo.id));
+  const errores = [];
+  for (const conexion of diagrama.conexiones) {
+    for (const extremo of [conexion.de, conexion.a]) {
+      if (!ids.has(extremo)) {
+        errores.push(`La conexión "${conexion.id}" apunta a un nodo que no existe: "${extremo}"`);
+      }
+    }
+    if (conexion.de === conexion.a) {
+      errores.push(`La conexión "${conexion.id}" une el nodo "${conexion.de}" consigo mismo.`);
     }
   }
   return errores;
