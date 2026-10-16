@@ -13,6 +13,7 @@
 - Firmados con `HS256` y `JWT_SECRET`. El payload solo lleva `sub` (el id del usuario) y la expiración.
 - Duran `JWT_EXPIRES_IN` (7 días por defecto).
 - `requireAuth` exige `Authorization: Bearer <token>`, verifica la firma aceptando solo `HS256` y **consulta la base de datos** en cada petición: un usuario borrado no puede seguir usando su token.
+- En gRPC, el mismo token viaja en el metadato `authorization: Bearer <token>`. Lo valida `interceptorAuth` con `verificarToken`, la misma función que usa `requireAuth`: misma firma, mismo algoritmo y misma consulta a la base. Sin token o con uno inválido responde `unauthenticated` y el frontend cierra la sesión.
 - Sin `JWT_SECRET` el servidor no arranca.
 - El token vive en el `localStorage` del frontend. Es simple y funciona entre dominios (Vercel y Render), pero un XSS en el frontend podría leerlo. Angular escapa las plantillas por defecto, lo que reduce ese riesgo.
 
@@ -21,6 +22,7 @@
 - Solo se permiten los orígenes listados en `FRONTEND_URL` (separados por comas, sin `/` final; el código quita la barra si viene).
 - Un origen no permitido no recibe cabeceras CORS y el navegador bloquea la respuesta.
 - Las peticiones sin cabecera `Origin` (curl, Postman, health checks de Render) se permiten: CORS protege al navegador, no reemplaza la autenticación.
+- Las rutas gRPC (`/codetodiagram.v1.*`) tienen su propio CORS con la misma lista de orígenes, más las cabeceras que necesita gRPC-Web (`X-Grpc-Web`, `Grpc-Timeout`, `Connect-*`, `Authorization`) y las que el navegador debe poder leer (`Grpc-Status`, `Grpc-Message`). Express conserva su configuración para REST.
 - No se usan cookies, así que no hay credenciales que CORS deba proteger.
 
 ## Límites de intentos
@@ -28,15 +30,18 @@
 | Ruta | Límite | Clave |
 |---|---|---|
 | `POST /api/auth/login` | 10 cada 15 min | IP (`trust proxy` en 1 para leer la IP real detrás del proxy de Render) |
-| `POST /api/ia` | 30 cada 15 min | id del usuario |
+| gRPC `GenerateDiagram` y `StreamDiagram` | 60 cada 15 min (ventana deslizante) | id del usuario |
 
-Al pasarlo responden `429` con un mensaje en español y las cabeceras estándar `RateLimit` (borrador 8). El contador vive en memoria: se reinicia al reiniciar el servidor y no se comparte entre instancias.
+El login responde `429` con un mensaje en español y las cabeceras estándar `RateLimit` (borrador 8). Las RPC de generación responden `resource_exhausted`; el reintento interno con Gemini no cuenta. Los contadores viven en memoria: se reinician al reiniciar el servidor y no se comparten entre instancias.
+
+Además, cada petición de generación admite como mucho 10 archivos y 60 000 caracteres de código, y una pregunta de 300 caracteres (`invalid_argument` si se supera). Así un usuario no puede agotar la cuota de Gemini con un solo pedido enorme.
 
 ## Datos y consultas
 
 - Todas las consultas SQL son parametrizadas.
 - Las columnas sensibles (`password_hash`, `google_id`) nunca se devuelven: se usa `COLUMNAS_PUBLICAS`.
-- Los items se filtran siempre por `usuario_id`; un item ajeno responde `404`, igual que uno inexistente, para no revelar que existe.
+- Los diagramas se filtran siempre por `usuario_id`; uno ajeno responde `not_found`, igual que uno inexistente, para no revelar que existe.
+- Lo que devuelve Gemini es dato no confiable: se valida con Zod y reglas propias antes de usarlo, y `SaveDiagram` vuelve a validar lo que manda el cliente antes de guardarlo.
 - La API key de Gemini solo vive en el backend y viaja en la cabecera `x-goog-api-key`, no en la URL.
 
 ## Variables de entorno
