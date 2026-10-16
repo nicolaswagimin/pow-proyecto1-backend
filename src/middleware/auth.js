@@ -11,6 +11,22 @@ export function firmarToken(usuario) {
   });
 }
 
+// Devuelve el usuario del token, o null si el token no es válido o el usuario ya no existe.
+// Lanza si la base de datos falla. La usan REST (requireAuth) y gRPC (interceptor).
+export async function verificarToken(token) {
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+  } catch {
+    return null;
+  }
+  // Se consulta la BD para que un usuario borrado no pueda seguir usando su token.
+  const { rows } = await pool.query(`SELECT ${COLUMNAS_PUBLICAS} FROM usuarios WHERE id = $1`, [
+    Number(payload.sub),
+  ]);
+  return rows[0] ?? null;
+}
+
 // Exige "Authorization: Bearer <token>" válido y deja el usuario en req.usuario.
 export async function requireAuth(req, res, next) {
   const [esquema, token] = (req.headers.authorization || '').split(' ');
@@ -18,22 +34,12 @@ export async function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Inicia sesión para continuar.' });
   }
 
-  let payload;
   try {
-    payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
-  } catch {
-    return res.status(401).json({ error: 'Tu sesión expiró o no es válida. Inicia sesión de nuevo.' });
-  }
-
-  try {
-    // Se consulta la BD para que un usuario borrado no pueda seguir usando su token.
-    const { rows } = await pool.query(`SELECT ${COLUMNAS_PUBLICAS} FROM usuarios WHERE id = $1`, [
-      Number(payload.sub),
-    ]);
-    if (!rows[0]) {
+    const usuario = await verificarToken(token);
+    if (!usuario) {
       return res.status(401).json({ error: 'Tu sesión expiró o no es válida. Inicia sesión de nuevo.' });
     }
-    req.usuario = rows[0];
+    req.usuario = usuario;
     next();
   } catch (err) {
     console.error(err.message);
