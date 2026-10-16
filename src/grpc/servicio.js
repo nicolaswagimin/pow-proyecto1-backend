@@ -121,5 +121,10 @@ export function crearServicioDiagramas({ generar = generarDiagrama, repo = repos
         },
       };
     },
+
+    async deleteDiagram(req, ctx) {
+      if (!(await repo.eliminar(usuarioDe(ctx), req.id))) throw noEncontrado();
+      return {};
+    },
   };
 }
