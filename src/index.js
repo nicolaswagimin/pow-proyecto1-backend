@@ -1,13 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { connectNodeAdapter } from '@connectrpc/connect-node';
 import { cors as connectCors } from '@connectrpc/connect';
 import { iniciarDB, dbDisponible } from './db.js';
 import { iaDisponible } from './ia.js';
 import authRouter from './routes/auth.js';
-import { interceptorAuth, interceptorLimite } from './grpc/interceptores.js';
-import { rutasGrpc } from './grpc/rutas.js';
+import { crearManejadorGrpc } from './grpc/manejador.js';
 import { crearServicioDiagramas } from './grpc/servicio.js';
 import { crearServidor } from './servidor.js';
 
@@ -65,12 +63,7 @@ app.use((err, req, res, next) => {
 // ---------- Arranque ----------
 // gRPC, gRPC-Web y Connect atienden las rutas /codetodiagram.v1.DiagramService/*; todo lo demás
 // sigue a Express (REST). El servidor acepta HTTP/1.1 y HTTP/2 en el mismo puerto.
-const manejador = connectNodeAdapter({
-  routes: rutasGrpc(crearServicioDiagramas()),
-  // Primero se autentica y después se aplica el límite por usuario.
-  interceptors: [interceptorAuth(), interceptorLimite()],
-  fallback: app,
-});
+const manejador = crearManejadorGrpc({ impl: crearServicioDiagramas(), fallback: app });
 
 // gRPC-Web desde el navegador necesita sus propios headers de CORS (los de Connect + Authorization).
 const corsGrpc = cors({
