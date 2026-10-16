@@ -34,6 +34,8 @@
 
 El login responde `429` con un mensaje en español y las cabeceras estándar `RateLimit` (borrador 8). Las RPC de generación responden `resource_exhausted`; el reintento interno con Gemini no cuenta. Los contadores viven en memoria: se reinician al reiniciar el servidor y no se comparten entre instancias.
 
+Los mensajes gRPC pesan como mucho 256 KB (`readMaxBytes` en `src/grpc/manejador.js`). Connect lee el cuerpo antes de los interceptores, así que sin este límite cualquiera, incluso sin sesión, podría mandar un cuerpo enorme (o comprimido) y agotar la memoria del proceso. Es el equivalente del límite de 100 kB de `express.json()` en REST.
+
 Además, cada petición de generación admite como mucho 10 archivos y 60 000 caracteres de código, y una pregunta de 300 caracteres (`invalid_argument` si se supera). Así un usuario no puede agotar la cuota de Gemini con un solo pedido enorme.
 
 ## Datos y consultas
