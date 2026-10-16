@@ -48,8 +48,6 @@ app.get('/api/health', async (req, res) => {
 // ---------- Autenticación ----------
 app.use('/api/auth', authRouter);
 
-// ---------- Rutas protegidas ----------
-
 // ---------- Errores ----------
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada.' });
@@ -97,5 +95,5 @@ crearServidor(manejarPeticion).listen(PORT, () => {
 
 // Si la BD falla, el servidor sigue levantado y solo se muestra el error.
 iniciarDB()
-  .then(() => console.log('Base de datos lista (tablas usuarios e items verificadas).'))
+  .then(() => console.log('Base de datos lista (tablas usuarios y diagramas verificadas).'))
   .catch((err) => console.error('No se pudo iniciar la base de datos:', err.message));
