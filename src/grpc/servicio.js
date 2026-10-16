@@ -99,5 +99,10 @@ export function crearServicioDiagramas({ generar = generarDiagrama, repo = repos
       });
       return { diagram: resumen(fila) };
     },
+
+    async listDiagrams(_req, ctx) {
+      const filas = await repo.listar(usuarioDe(ctx));
+      return { diagrams: filas.map(resumen) };
+    },
   };
 }
