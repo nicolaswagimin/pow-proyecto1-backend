@@ -44,3 +44,31 @@ message SourceFile {
   string name = 1;
   string content = 2;
 }
+
+message Node {
+  string id = 1;
+  string name = 2;
+  NodeCategory category = 3;
+  string technology = 4;
+  string description = 5;
+  // Archivo de origen del que sale el nodo (si aplica).
+  string file = 6;
+}
+
+message Edge {
+  string id = 1;
+  string from = 2;
+  string to = 3;
+  string label = 4;
+  // Posición del mensaje en un diagrama de secuencia (1, 2, 3…); 0 en arquitectura.
+  int32 order = 5;
+}
+
+// Diagrama ya validado por el servidor.
+message Diagram {
+  DiagramType type = 1;
+  string title = 2;
+  string description = 3;
+  repeated Node nodes = 4;
+  repeated Edge edges = 5;
+}
