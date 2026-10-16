@@ -1,4 +1,4 @@
-import { toJson } from '@bufbuild/protobuf';
+import { fromJson, toJson } from '@bufbuild/protobuf';
 import { timestampFromDate } from '@bufbuild/protobuf/wkt';
 import { Code, ConnectError } from '@connectrpc/connect';
 import { DiagramSchema, ProgressStage } from '../gen/codetodiagram/v1/diagram_pb.js';
@@ -18,6 +18,8 @@ const MENSAJES_PROGRESO = {
 };
 
 const usuarioDe = (ctx) => ctx.values.get(USUARIO).id;
+
+const noEncontrado = () => new ConnectError('Ese diagrama no existe o no es tuyo.', Code.NotFound);
 
 // Fila de la tabla diagramas → SavedDiagramSummary.
 function resumen(fila) {
@@ -103,6 +105,21 @@ export function crearServicioDiagramas({ generar = generarDiagrama, repo = repos
     async listDiagrams(_req, ctx) {
       const filas = await repo.listar(usuarioDe(ctx));
       return { diagrams: filas.map(resumen) };
+    },
+
+    async getDiagram(req, ctx) {
+      const fila = await repo.obtener(usuarioDe(ctx), req.id);
+      if (!fila) throw noEncontrado();
+      return {
+        diagram: {
+          id: fila.id,
+          title: fila.titulo,
+          question: fila.pregunta ?? '',
+          files: fila.archivos,
+          diagram: fromJson(DiagramSchema, fila.diagrama, { ignoreUnknownFields: true }),
+          createdAt: timestampFromDate(new Date(fila.creado_en)),
+        },
+      };
     },
   };
 }
