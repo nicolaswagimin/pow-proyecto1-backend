@@ -35,7 +35,19 @@ CREATE TABLE IF NOT EXISTS diagramas (
   pregunta       TEXT DEFAULT '',
   archivos       JSONB NOT NULL,
   diagrama       JSONB NOT NULL,
-  creado_en      TIMESTAMP DEFAULT NOW(),
-  actualizado_en TIMESTAMP DEFAULT NOW()
+  creado_en      TIMESTAMPTZ DEFAULT NOW(),
+  actualizado_en TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Bases creadas con TIMESTAMP (sin zona): se convierten a TIMESTAMPTZ interpretando los valores
+-- como UTC, que es como los guarda NOW() en Neon. Si ya son TIMESTAMPTZ, no hace nada.
+DO $$
+BEGIN
+  IF (SELECT data_type FROM information_schema.columns
+      WHERE table_name = 'diagramas' AND column_name = 'creado_en') = 'timestamp without time zone' THEN
+    ALTER TABLE diagramas
+      ALTER COLUMN creado_en TYPE TIMESTAMPTZ USING creado_en AT TIME ZONE 'UTC',
+      ALTER COLUMN actualizado_en TYPE TIMESTAMPTZ USING actualizado_en AT TIME ZONE 'UTC';
+  END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS diagramas_usuario_id_idx ON diagramas (usuario_id, creado_en DESC);
