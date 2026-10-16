@@ -18,7 +18,11 @@ export function validarDiagrama(valor) {
   }
 
   const diagrama = forma.data;
-  const errores = [...revisarTipoYCategorias(diagrama), ...revisarCantidad(diagrama)];
+  const errores = [
+    ...revisarTipoYCategorias(diagrama),
+    ...revisarCantidad(diagrama),
+    ...revisarIds(diagrama),
+  ];
   return errores.length ? { ok: false, errores } : { ok: true, diagrama };
 }
 
@@ -49,4 +53,23 @@ function revisarCantidad(diagrama) {
     return [`El diagrama debe tener como máximo ${MAX_NODOS} nodos (tiene ${diagrama.nodos.length}).`];
   }
   return [];
+}
+
+const FORMATO_ID = /^[a-z0-9-]+$/;
+
+// Los ids deben ser únicos (entre nodos y entre conexiones) y estables: el diff los usa para
+// emparejar el antes y el después.
+function revisarIds(diagrama) {
+  const errores = [];
+  for (const lista of [diagrama.nodos, diagrama.conexiones]) {
+    const vistos = new Set();
+    for (const { id } of lista) {
+      if (!FORMATO_ID.test(id)) {
+        errores.push(`El id "${id}" solo puede tener minúsculas, números y guiones.`);
+      }
+      if (vistos.has(id)) errores.push(`El id "${id}" está repetido.`);
+      vistos.add(id);
+    }
+  }
+  return errores;
 }
