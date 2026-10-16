@@ -24,3 +24,17 @@ CREATE TABLE IF NOT EXISTS items (
 -- Cada item pertenece a un usuario; si se borra el usuario, se borran sus items.
 ALTER TABLE items ADD COLUMN IF NOT EXISTS usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE;
 CREATE INDEX IF NOT EXISTS items_usuario_id_idx ON items (usuario_id);
+
+-- Diagramas guardados por cada usuario (el historial). archivos y diagrama se guardan como JSONB:
+-- archivos = [{ name, content }], diagrama = mensaje Diagram del .proto en formato JSON.
+CREATE TABLE IF NOT EXISTS diagramas (
+  id             SERIAL PRIMARY KEY,
+  usuario_id     INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+  titulo         VARCHAR(200) NOT NULL,
+  tipo           VARCHAR(20) NOT NULL,
+  pregunta       TEXT DEFAULT '',
+  archivos       JSONB NOT NULL,
+  diagrama       JSONB NOT NULL,
+  creado_en      TIMESTAMP DEFAULT NOW(),
+  actualizado_en TIMESTAMP DEFAULT NOW()
+);
