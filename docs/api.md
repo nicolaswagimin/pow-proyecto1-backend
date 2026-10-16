@@ -20,7 +20,7 @@ URL base: `http://localhost:3001/api` en local y `https://pow-proyecto1-backend.
 
 ### `GET /api/health`
 
-Pública. Dice si el servidor, la base de datos y la IA están disponibles. El frontend la usa para dibujar el estado del sistema.
+Pública. Dice si el servidor, la base de datos y la IA están disponibles. La usan los health checks de Render y `demo.sh`.
 
 ```json
 { "ok": true, "db": true, "ia": true }
@@ -103,70 +103,20 @@ Response `200`:
 
 Errores: los `401` comunes y `500` "No se pudo verificar la sesión. Revisa la base de datos."
 
-## Items (CRUD de ejemplo)
+## Servicio de diagramas (gRPC)
 
-Todas protegidas. Cada consulta se filtra por el usuario del token: nadie ve ni borra registros ajenos.
+Generar, guardar, listar, abrir y eliminar diagramas **no** va por REST: va por gRPC en el mismo servidor y puerto, en las rutas `/codetodiagram.v1.DiagramService/*`. Las RPC, sus errores y cómo probarlas están en [grpc.md](grpc.md).
 
-### `GET /api/items`
+| RPC | Tipo | Resumen |
+|---|---|---|
+| `GenerateDiagram` | Unario | Código → diagrama validado |
+| `StreamDiagram` | Server streaming | Progreso, diagrama y diff |
+| `SaveDiagram` | Unario | Guarda en el historial |
+| `ListDiagrams` | Unario | Historial del usuario |
+| `GetDiagram` | Unario | Un diagrama guardado con su código |
+| `DeleteDiagram` | Unario | Borra un diagrama propio |
 
-Response `200`: los items del usuario, del más nuevo al más viejo.
-
-```json
-[
-  { "id": 12, "titulo": "Mi primer registro", "descripcion": "", "creado_en": "…", "usuario_id": 7 }
-]
-```
-
-Error: `500` "No se pudieron obtener los registros. Revisa la base de datos."
-
-### `POST /api/items`
-
-Request:
-
-```json
-{ "titulo": "Mi primer registro", "descripcion": "Opcional" }
-```
-
-Response `201`: el item creado (mismas columnas que en la lista).
-
-| Código | Mensaje |
-|---|---|
-| `400` | "El título es obligatorio." / "El título no puede superar los 200 caracteres." |
-| `500` | "No se pudo crear el registro. Revisa la base de datos." |
-
-### `DELETE /api/items/:id`
-
-Response `204` sin cuerpo.
-
-| Código | Mensaje |
-|---|---|
-| `400` | "El id no es válido." (no es un entero positivo) |
-| `404` | "El registro no existe." (también si es de otro usuario) |
-| `500` | "No se pudo eliminar el registro. Revisa la base de datos." |
-
-## IA
-
-### `POST /api/ia`
-
-Protegida, con límite de 30 preguntas cada 15 minutos por usuario.
-
-Request:
-
-```json
-{ "pregunta": "Hola, ¿quién eres?" }
-```
-
-Response `200`:
-
-```json
-{ "respuesta": "Soy un asistente…" }
-```
-
-| Código | Mensaje |
-|---|---|
-| `400` | "Escribe una pregunta." |
-| `429` | "Hiciste muchas preguntas seguidas. Espera unos minutos y vuelve a intentarlo." |
-| `502` | El error de Gemini: "La IA no está configurada: falta GEMINI_API_KEY…", "Error al consultar Gemini: …" o "La IA no devolvió ninguna respuesta…" |
+Las rutas REST `/api/items` y `/api/ia` se eliminaron: hoy responden `404`.
 
 ## Probar con curl
 
@@ -176,6 +126,6 @@ TOKEN=$(curl -s -X POST http://localhost:3001/api/auth/registro -H "Content-Type
   | node -pe 'JSON.parse(require("fs").readFileSync(0)).token')
 
 curl http://localhost:3001/api/auth/yo -H "Authorization: Bearer $TOKEN"
-curl -X POST http://localhost:3001/api/items -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"titulo":"Mi primer registro"}'
-curl -X POST http://localhost:3001/api/ia -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"pregunta":"Hola"}'
 ```
+
+Para el servicio de diagramas, ver los ejemplos con `buf curl` en [grpc.md](grpc.md#probar-con-buf-curl).
