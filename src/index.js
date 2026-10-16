@@ -8,7 +8,6 @@ import { iaDisponible } from './ia.js';
 import { requireAuth } from './middleware/auth.js';
 import { limiteIA } from './middleware/limites.js';
 import authRouter from './routes/auth.js';
-import itemsRouter from './routes/items.js';
 import iaRouter from './routes/ia.js';
 import { interceptorAuth, interceptorLimite } from './grpc/interceptores.js';
 import { rutasGrpc } from './grpc/rutas.js';
@@ -53,7 +52,6 @@ app.get('/api/health', async (req, res) => {
 app.use('/api/auth', authRouter);
 
 // ---------- Rutas protegidas ----------
-app.use('/api/items', requireAuth, itemsRouter);
 app.use('/api/ia', requireAuth, limiteIA, iaRouter);
 
 // ---------- Errores ----------
