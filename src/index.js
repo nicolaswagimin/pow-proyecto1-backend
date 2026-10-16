@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import { connectNodeAdapter } from '@connectrpc/connect-node';
 import { iniciarDB, dbDisponible } from './db.js';
 import { iaDisponible } from './ia.js';
 import { requireAuth } from './middleware/auth.js';
@@ -8,6 +9,8 @@ import { limiteIA } from './middleware/limites.js';
 import authRouter from './routes/auth.js';
 import itemsRouter from './routes/items.js';
 import iaRouter from './routes/ia.js';
+import { rutasGrpc } from './grpc/rutas.js';
+import { crearServidor } from './servidor.js';
 
 const PORT = process.env.PORT || 3001;
 
@@ -67,7 +70,14 @@ app.use((err, req, res, next) => {
 });
 
 // ---------- Arranque ----------
-app.listen(PORT, () => {
+// gRPC, gRPC-Web y Connect atienden las rutas /codetodiagram.v1.DiagramService/*; todo lo demás
+// sigue a Express (REST). El servidor acepta HTTP/1.1 y HTTP/2 en el mismo puerto.
+const manejador = connectNodeAdapter({
+  routes: rutasGrpc({}),
+  fallback: app,
+});
+
+crearServidor(manejador).listen(PORT, () => {
   console.log(`Backend escuchando en http://localhost:${PORT}`);
   console.log(`CORS permitido para: ${origenesPermitidos.join(', ')}`);
   if (!iaDisponible()) console.warn('Aviso: falta GEMINI_API_KEY, la IA no funcionará.');
