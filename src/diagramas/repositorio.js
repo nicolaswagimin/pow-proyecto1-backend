@@ -13,3 +13,13 @@ export async function guardar(usuarioId, { titulo, tipo, pregunta, archivos, dia
   );
   return rows[0];
 }
+
+// Historial del usuario, del más reciente al más antiguo. No trae el código (puede ser grande).
+export async function listar(usuarioId) {
+  const { rows } = await pool.query(
+    `SELECT id, titulo, tipo, pregunta, diagrama, creado_en FROM diagramas
+     WHERE usuario_id = $1 ORDER BY creado_en DESC, id DESC`,
+    [usuarioId],
+  );
+  return rows;
+}
