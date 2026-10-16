@@ -88,3 +88,32 @@ message Progress {
   ProgressStage stage = 1;
   string message = 2;
 }
+
+message GenerateDiagramRequest {
+  repeated SourceFile files = 1;
+  DiagramType type = 2;
+  // Pregunta opcional que enfoca el diagrama.
+  string question = 3;
+  // Diagrama anterior: la IA reutiliza sus ids para que el diff no muestre cambios falsos.
+  optional Diagram previous = 4;
+}
+
+message GenerateDiagramResponse {
+  Diagram diagram = 1;
+}
+
+message StreamDiagramRequest {
+  repeated SourceFile files = 1;
+  DiagramType type = 2;
+  string question = 3;
+  optional Diagram previous = 4;
+}
+
+// Cada evento del stream: progreso, el diagrama final y, si hubo anterior, el diff.
+message StreamDiagramResponse {
+  oneof event {
+    Progress progress = 1;
+    Diagram diagram = 2;
+    DiagramDiff diff = 3;
+  }
+}
