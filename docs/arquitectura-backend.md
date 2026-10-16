@@ -1,26 +1,54 @@
 # Arquitectura del backend · CodeToDiagram
 
-Node.js 20+ con Express 5, módulos ES, PostgreSQL con `pg` y Gemini por su API REST (sin SDK).
+Node.js 20+ con Express 5 y módulos ES, PostgreSQL con `pg`, Gemini por su API REST (sin SDK) y gRPC con Connect. Un solo proceso y un solo puerto sirven REST (Express) y el servicio de diagramas (gRPC, gRPC-Web y Connect).
 
 ## Carpetas
 
 ```
-schema.sql               tablas usuarios e items (idempotente, se ejecuta al arrancar)
-.env.example             variables de entorno sin valores
+schema.sql                 tablas usuarios y diagramas (idempotente, se ejecuta al arrancar)
+proto/codetodiagram/v1/    contrato gRPC (diagram.proto), fuente única de los tipos
+buf.yaml, buf.gen.yaml     lint y generación de código con Buf
+.env.example               variables de entorno sin valores
 src/
-  index.js               arranque: comprueba JWT_SECRET, CORS, JSON, rutas y manejo de errores
-  db.js                  pool de PostgreSQL, iniciarDB() y dbDisponible()
-  ia.js                  preguntarIA() contra Gemini e INSTRUCCIONES del asistente
+  index.js                 arranque: JWT_SECRET, Express, Connect, CORS y servidor
+  servidor.js              un puerto para HTTP/1.1 y HTTP/2 (detecta el prefacio de HTTP/2)
+  limitador.js             límite por ventana deslizante en memoria (para gRPC)
+  db.js                    pool de PostgreSQL, iniciarDB() y dbDisponible()
+  ia.js                    llamarGeminiJson(): Gemini en modo JSON
+  gen/                     código generado del .proto (no se edita a mano)
+  grpc/
+    rutas.js               registra DiagramService en el router de Connect
+    servicio.js            implementación de las 6 RPC
+    interceptores.js       interceptorAuth (JWT) e interceptorLimite (60 / 15 min)
+    contexto.js            clave de contexto USUARIO
+  diagramas/
+    prompt.js              instrucciones y prompt para Gemini
+    generar.js             llama, valida y reintenta una vez
+    esquema.js, validar.js validación del JSON de Gemini (Zod + reglas propias)
+    convertir.js           JSON de Gemini ↔ mensajes del proto
+    diff.js                diff entre dos versiones de un diagrama
+    entrada.js             límites de lo que manda el usuario
+    repositorio.js         consultas a la tabla diagramas
   middleware/
-    auth.js              requireAuth, firmarToken y COLUMNAS_PUBLICAS
-    limites.js           limiteLogin (por IP) y limiteIA (por usuario)
+    auth.js                requireAuth, verificarToken, firmarToken y COLUMNAS_PUBLICAS
+    limites.js             limiteLogin (por IP)
   routes/
-    auth.js              /registro, /login y /yo
-    items.js             CRUD de items filtrado por usuario
-    ia.js                pregunta a la IA
+    auth.js                /registro, /login y /yo
+test/                      pruebas con node:test (Gemini y base de datos simulados)
 ```
 
-## Middleware, en orden
+## Cómo se reparte una petición
+
+```
+conexión TCP ──► servidor.js ──┬─ prefacio HTTP/2 ──► http2.Server ─┐
+                               └─ cualquier otro ───► http.Server ──┤
+                                                                    ▼
+                                             ¿ruta /codetodiagram.v1.*?
+                                       sí ──► CORS gRPC ──► connectNodeAdapter
+                                       no ──► Express (fallback de Connect)
+```
+
+## Middleware de Express (REST), en orden
 
 | # | Middleware | Alcance | Qué hace |
 |---|---|---|---|
@@ -28,28 +56,38 @@ src/
 | 2 | `cors` | Todo | Solo los orígenes de `FRONTEND_URL`; sin `Origin` se permite |
 | 3 | `express.json()` | Todo | Lee el cuerpo JSON (hasta 100 kB) |
 | 4 | `limiteLogin` | `POST /api/auth/login` | 10 intentos cada 15 min por IP |
-| 5 | `requireAuth` | `/api/items`, `/api/ia`, `/api/auth/yo` | Verifica el JWT y carga `req.usuario` desde la base |
-| 6 | `limiteIA` | `/api/ia` (después de `requireAuth`) | 30 preguntas cada 15 min por usuario |
-| 7 | 404 de `/api` | Rutas no encontradas | `{ "error": "Ruta no encontrada." }` |
-| 8 | Manejador de errores | Todo | JSON mal formado → `400`; cualquier otro → `500` sin detalles |
+| 5 | `requireAuth` | `/api/auth/yo` | Verifica el JWT y carga `req.usuario` desde la base |
+| 6 | 404 de `/api` | Rutas no encontradas | `{ "error": "Ruta no encontrada." }` |
+| 7 | Manejador de errores | Todo | JSON mal formado → `400`; cualquier otro → `500` sin detalles |
 
-## Flujo de una petición protegida
+## Interceptores de gRPC, en orden
 
-Ejemplo: `POST /api/items` con `{ "titulo": "…" }`.
+| # | Interceptor | Alcance | Qué hace |
+|---|---|---|---|
+| 1 | `interceptorAuth` | Todas las RPC | Valida `authorization: Bearer <token>` con `verificarToken` y deja el usuario en el contexto |
+| 2 | `interceptorLimite` | `GenerateDiagram`, `StreamDiagram` | 60 cada 15 min por usuario → `resource_exhausted` |
+
+## Flujo de una petición gRPC: `StreamDiagram`
 
 ```
-Navegador ──► CORS ──► express.json ──► requireAuth ──► routes/items.js ──► PostgreSQL
-   ▲            │            │              │                 │                 │
-   │       origen no      JSON mal      sin token o       título vacío       error
-   │       permitido      formado       inválido → 401    → 400              → 500
-   │                      → 400
-   └──────────── 201 { id, titulo, descripcion, creado_en, usuario_id } ◄──────┘
+Navegador (gRPC-Web) ──► servidor.js ──► CORS ──► interceptorAuth ──► interceptorLimite ──► servicio.streamDiagram
+                                                       │                     │                      │
+                                                 unauthenticated     resource_exhausted     validarEntrada
+                                                                                                     │ invalid_argument
+                                                                                                     ▼
+                                       progreso ◄── generarDiagrama ──► Gemini ──► validarDiagrama ──┐
+                                                         ▲                                           │ inválido
+                                                         └────────── 1 reintento con errores ◄───────┘
+                                                                                                     │ válido
+                                         eventos: progress…, diagram, diff (si había previous), progress(DONE)
 ```
 
-1. CORS compara el `Origin` con la lista de `FRONTEND_URL`.
-2. `express.json()` convierte el cuerpo; si no es JSON válido, el manejador de errores responde `400`.
-3. `requireAuth` separa `Bearer <token>`, lo verifica con `JWT_SECRET` (solo `HS256`) y busca al usuario por `sub`. Si algo falla responde `401`; si la base falla, `500`.
-4. La ruta valida el título, inserta con `usuario_id = req.usuario.id` y responde `201`.
+1. `servidor.js` recibe la conexión HTTP/1.1 y la pasa al adaptador de Connect, que reconoce gRPC-Web.
+2. `interceptorAuth` valida el token (misma lógica que REST) y `interceptorLimite` cuenta la llamada.
+3. `validarEntrada` revisa archivos, tamaño, tipo y pregunta.
+4. `generarDiagrama` llama a Gemini; cada etapa (`ANALYZING`, `VALIDATING`, `RETRYING`) sale al cliente como evento `progress` en cuanto ocurre.
+5. Con el diagrama validado se envía `diagram`; si la petición traía `previous`, también el `diff` calculado en el servidor. Termina con `progress` `DONE`.
+6. Si el usuario sigue escribiendo, el cliente cancela y la señal corta también el `fetch` a Gemini.
 
 ## Flujo de un login
 
@@ -62,11 +100,9 @@ Navegador ──► CORS ──► express.json ──► requireAuth ──► 
 
 1. `dotenv` carga el `.env`.
 2. Sin `JWT_SECRET`, el proceso termina con un mensaje claro.
-3. `app.listen` arranca **antes** de la base de datos: si Neon falla, el servidor sigue arriba, `/api/health` responde `db: false` y el error queda en el log.
+3. El servidor empieza a escuchar **antes** de conectar la base de datos: si Neon falla, sigue arriba, `/api/health` responde `db: false` y el error queda en el log.
 4. `iniciarDB()` ejecuta `schema.sql`.
 
-## IA
+## Pruebas
 
-`src/ia.js` llama a `generativelanguage.googleapis.com/v1beta/models/<modelo>:generateContent` con `systemInstruction` (la constante `INSTRUCCIONES`) y la pregunta del usuario. Une las partes de texto de la primera respuesta. Cualquier fallo se convierte en un `Error` con mensaje en español que la ruta devuelve como `502`.
-
-Hoy `INSTRUCCIONES` es un asistente general. Para CodeToDiagram, Gemini analizará el código y devolverá nodos y conexiones en JSON para que el frontend los dibuje; las instrucciones deberán pedir que responda solo con el JSON de nodos y aristas a partir del código recibido.
+`npm test` ejecuta `node --test` sobre `test/`: validador, conversión, diff, generación con reintento, servidor de un puerto, limitador, interceptores y servicio. Gemini y la base de datos se reemplazan por dobles, así que las pruebas no gastan cuota ni tocan Neon.
