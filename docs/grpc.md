@@ -48,7 +48,7 @@ Archivo: [`proto/codetodiagram/v1/diagram.proto`](../proto/codetodiagram/v1/diag
 
 Mensajes principales: `Diagram` (`type`, `title`, `description`, `nodes`, `edges`), `Node` (`id`, `name`, `category`, `technology`, `description`, `file`), `Edge` (`id`, `from`, `to`, `label`, `order`) y `DiagramDiff` (listas de `Change { id, kind }`).
 
-`previous` es el diagrama anterior: Gemini lo recibe para reutilizar los mismos `id` y que el diff no muestre cambios falsos (ver [ia.md](ia.md)).
+`previous` es el diagrama anterior (si no pasa la validación, por ejemplo por tener más de 12 nodos, se ignora): Gemini lo recibe para reutilizar los mismos `id` y que el diff no muestre cambios falsos (ver [ia.md](ia.md)).
 
 ## Autenticación y límites
 
@@ -61,10 +61,10 @@ Mensajes principales: `Diagram` (`type`, `title`, `description`, `nodes`, `edges
 | Código | Cuándo |
 |---|---|
 | `unauthenticated` | Sin token, token inválido o usuario borrado |
-| `invalid_argument` | Sin archivos, más de 10, más de 60 000 caracteres, sin tipo, pregunta de más de 300 caracteres, o un diagrama inválido al guardar |
-| `resource_exhausted` | Se superó el límite de 60 cada 15 minutos |
+| `invalid_argument` | Sin archivos, todos vacíos, más de 10, más de 60 000 caracteres, sin tipo, pregunta de más de 300 caracteres, o un diagrama inválido al guardar |
+| `resource_exhausted` | Se superó el límite de 60 cada 15 minutos, o el mensaje pesa más de 256 KB |
 | `internal` | Gemini devolvió un diagrama inválido dos veces |
-| `unavailable` | No se pudo consultar a Gemini o la base de datos no respondió al verificar la sesión |
+| `unavailable` | No se pudo consultar a Gemini, Gemini tardó más de 60 s, o la base de datos no respondió al verificar la sesión |
 | `failed_precondition` | Falta `GEMINI_API_KEY` en el servidor |
 | `not_found` | El diagrama no existe o es de otro usuario |
 
