@@ -4,6 +4,8 @@ syntax = "proto3";
 
 package codetodiagram.v1;
 
+import "google/protobuf/timestamp.proto";
+
 // Tipo de diagrama. Para agregar uno nuevo (flujo de trabajo, flujo de datos, ciclo de vida)
 // basta con un valor más aquí, un layout y un componente en el frontend.
 enum DiagramType {
@@ -117,3 +119,54 @@ message StreamDiagramResponse {
     DiagramDiff diff = 3;
   }
 }
+
+// Resumen de un diagrama guardado, para el historial.
+message SavedDiagramSummary {
+  int32 id = 1;
+  string title = 2;
+  DiagramType type = 3;
+  string question = 4;
+  int32 node_count = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+// Diagrama guardado completo: el código y el diagrama, para volver a abrirlo.
+message SavedDiagram {
+  int32 id = 1;
+  string title = 2;
+  string question = 3;
+  repeated SourceFile files = 4;
+  Diagram diagram = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message SaveDiagramRequest {
+  string title = 1;
+  string question = 2;
+  repeated SourceFile files = 3;
+  Diagram diagram = 4;
+}
+
+message SaveDiagramResponse {
+  SavedDiagramSummary diagram = 1;
+}
+
+message ListDiagramsRequest {}
+
+message ListDiagramsResponse {
+  repeated SavedDiagramSummary diagrams = 1;
+}
+
+message GetDiagramRequest {
+  int32 id = 1;
+}
+
+message GetDiagramResponse {
+  SavedDiagram diagram = 1;
+}
+
+message DeleteDiagramRequest {
+  int32 id = 1;
+}
+
+message DeleteDiagramResponse {}
