@@ -75,6 +75,14 @@ test('validarEntrada limita el código a 60 000 caracteres', () => {
   );
 });
 
+test('validarEntrada rechaza código vacío', () => {
+  const files = [{ name: 'a.js', content: '  \n ' }, { name: 'b.js', content: '' }];
+  assert.equal(
+    mensajeDe(() => validarEntrada({ ...entrada, files })),
+    'Pega algo de código antes de generar.',
+  );
+});
+
 test('validarEntrada exige nombre de archivo', () => {
   const files = [{ name: '  ', content: 'x' }];
   assert.equal(mensajeDe(() => validarEntrada({ ...entrada, files })), 'Cada archivo necesita un nombre.');
@@ -156,6 +164,19 @@ test('stream emite progreso, diagrama y diff en ese orden', async () => {
   assert.ok(eventos[0].event.value.message.length > 0);
   assert.deepEqual(eventos[3].event.value.nodes.map((c) => [c.id, c.kind]), [['db', ChangeKind.ADDED]]);
   assert.equal(eventos[4].event.value.stage, ProgressStage.DONE);
+});
+
+test('stream descarta un previous inválido en vez de mandarlo a Gemini', async () => {
+  let recibido = 'sin llamar';
+  const generar = async (e) => {
+    recibido = e.anterior;
+    return diagrama();
+  };
+  const roto = diagrama(Array.from({ length: 20 }, (_, i) => `n${i}`));
+  const servicio = crearServicioDiagramas({ generar, repo: repoFalso() });
+  const eventos = await recoger(servicio.streamDiagram({ ...entrada, previous: roto }, contexto()));
+  assert.equal(recibido, undefined);
+  assert.ok(!eventos.some((e) => e.event.case === 'diff'));
 });
 
 test('stream sin previous no emite diff', async () => {
