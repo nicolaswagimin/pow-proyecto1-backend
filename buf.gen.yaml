@@ -1,0 +1,10 @@
+# Genera el código JavaScript (con tipos .d.ts) del contrato en src/gen. Ejecuta: npm run proto:gen
+version: v2
+inputs:
+  - directory: proto
+plugins:
+  - local: protoc-gen-es
+    out: src/gen
+    opt:
+      - target=js+dts
+      - import_extension=js
