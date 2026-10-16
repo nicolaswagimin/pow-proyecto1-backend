@@ -38,3 +38,9 @@ enum ProgressStage {
   PROGRESS_STAGE_RETRYING = 3;
   PROGRESS_STAGE_DONE = 4;
 }
+
+// Un archivo de código pegado por el usuario.
+message SourceFile {
+  string name = 1;
+  string content = 2;
+}
