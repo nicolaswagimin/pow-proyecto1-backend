@@ -13,5 +13,5 @@ gRPC puro necesita HTTP/2; el navegador (gRPC-Web) y REST usan HTTP/1.1. Node no
 ## Consecuencias
 
 - En local funcionan a la vez `curl` contra REST, `buf curl --protocol grpc --http2-prior-knowledge` y el navegador con gRPC-Web, todos en el puerto 3001.
-- En Render, el proxy habla HTTP/1.1 con la app: gRPC-Web funciona y gRPC puro no llega (ver `despliegue.md`).
+- En Render, gRPC-Web y gRPC puro funcionan a través de su proxy HTTPS (verificado el 2026-10-16; ver `despliegue.md`).
 - Son unas 30 líneas propias, probadas en `test/servidor.test.js` con un cliente HTTP/1.1 y otro HTTP/2.
