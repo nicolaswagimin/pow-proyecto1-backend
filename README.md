@@ -55,7 +55,7 @@ Todas las RPC exigen el JWT en el metadato `authorization: Bearer <token>`.
 
 | RPC | Tipo | Qué hace |
 |---|---|---|
-| `GenerateDiagram` | Unario | Código + tipo + pregunta → diagrama validado (60 / 15 min por usuario) |
+| `GenerateDiagram` | Unario | Código + tipo (arquitectura, secuencia o clases) + pregunta → diagrama validado y verificado contra el código (60 / 15 min por usuario) |
 | `StreamDiagram` | Server streaming | Igual, enviando el progreso y, al editar, el diff |
 | `SaveDiagram` | Unario | Guarda en el historial |
 | `ListDiagrams` | Unario | Historial del usuario |
@@ -108,5 +108,5 @@ Más ejemplos y el detalle de errores en [docs/grpc.md](docs/grpc.md).
 
 ## Próximos pasos
 
-- Más tipos de diagrama (flujo de trabajo, flujo de datos, ciclo de vida): un valor en el enum `DiagramType`, sus reglas en el prompt y su dibujo en el frontend.
+- Más tipos de diagrama (flujo de trabajo, flujo de datos, ciclo de vida; Clases ya está): un valor en el enum `DiagramType`, sus reglas en el prompt y su dibujo en el frontend.
 - Cubrir los pendientes de [docs/seguridad.md](docs/seguridad.md): límite en el registro, cabeceras de seguridad y revocación de tokens.
