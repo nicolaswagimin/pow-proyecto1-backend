@@ -31,6 +31,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 ### Documentación
 - Nuevos `docs/grpc.md`, `docs/ia.md` y decisiones `docs/decisiones/0001` a `0005`.
 - Actualizados `api.md`, `base-de-datos.md`, `seguridad.md`, `despliegue.md` y `arquitectura-backend.md`.
+- Resultado verificado en Render: gRPC-Web (unario y streaming) y gRPC puro por HTTPS funcionan.
 
 ## 2026-10-12
 
