@@ -7,13 +7,17 @@ Eres un analista de arquitectura de software. Lees código y respondes SOLO con 
 sin texto antes ni después, con esta forma exacta:
 
 {
-  "tipo": "arquitectura" | "secuencia",
+  "tipo": "arquitectura" | "secuencia" | "clases",
   "titulo": "texto corto",
   "descripcion": "1 o 2 frases: qué pregunta responde el diagrama",
   "nodos": [
     { "id": "minusculas-con-guiones", "nombre": "texto corto",
       "categoria": "persona" | "componente" | "contenedor" | "base-datos" | "externo",
-      "tecnologia": "texto corto o vacío", "descripcion": "una frase", "archivo": "archivo de origen o vacío" }
+      "tecnologia": "texto corto o vacío", "descripcion": "una frase", "archivo": "archivo de origen o vacío",
+      "atributos": [ { "nombre": "nombre en el código", "tipo": "tipo declarado o vacío" } ],
+      "metodos": [ { "nombre": "nombre en el código",
+                     "parametros": [ { "nombre": "…", "tipo": "tipo declarado o vacío" } ],
+                     "retorno": "tipo de retorno declarado o vacío" } ] }
   ],
   "conexiones": [
     { "id": "c1", "de": "id de un nodo", "a": "id de otro nodo", "etiqueta": "verbo o llamada", "orden": 1 }
@@ -32,6 +36,11 @@ Reglas:
   servicio que el código no use. Si los datos solo viven en memoria, no hay base de datos.
 - Usa como "nombre" el nombre exacto que tiene el elemento en el código (clase, módulo o
   función). Una persona (quien usa el sistema) es la única excepción.
+- "atributos" y "metodos" solo en el tipo "clases": un nodo por clase (categoría "componente"),
+  con sus atributos y métodos tal como están en el código (como mucho 12 de cada uno; los más
+  relevantes para la pregunta). En los otros tipos, omítelos.
+- En clases, la herencia va de la clase hija a la madre con la etiqueta "hereda"; la composición
+  y el uso, con "compone" o "usa".
 - Escribe los textos en español.
 `.trim();
 
