@@ -27,7 +27,11 @@ Reglas:
 - "orden" es obligatorio (1, 2, 3…) en secuencia; omítelo en arquitectura.
 - persona = alguien que usa el sistema; contenedor = aplicación o servicio desplegable;
   componente = módulo dentro de un contenedor; base-datos = almacenamiento; externo = sistema de terceros.
-- No inventes piezas que no estén en el código.
+- Usa SOLO elementos que estén en el código: clases, módulos, servicios o bibliotecas que el
+  código define, importa o llama. No agregues una base de datos, caché, cola, API externa ni
+  servicio que el código no use. Si los datos solo viven en memoria, no hay base de datos.
+- Usa como "nombre" el nombre exacto que tiene el elemento en el código (clase, módulo o
+  función). Una persona (quien usa el sistema) es la única excepción.
 - Escribe los textos en español.
 `.trim();
 
