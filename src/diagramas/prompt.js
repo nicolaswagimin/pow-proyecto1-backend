@@ -9,7 +9,7 @@ sin texto antes ni después, con esta forma exacta:
 {
   "tipo": "arquitectura" | "secuencia" | "clases",
   "titulo": "texto corto",
-  "descripcion": "1 o 2 frases: qué pregunta responde el diagrama",
+  "descripcion": "1 o 2 frases: qué muestra el diagrama",
   "nodos": [
     { "id": "minusculas-con-guiones", "nombre": "texto corto",
       "categoria": "persona" | "componente" | "contenedor" | "base-datos" | "externo",
@@ -41,6 +41,10 @@ Reglas:
   relevantes para la pregunta). En los otros tipos, omítelos.
 - En clases, la herencia va de la clase hija a la madre con la etiqueta "hereda"; la composición
   y el uso, con "compone" o "usa".
+- El título y la descripción describen SOLO lo que este tipo de diagrama dibuja. No prometas
+  lo que no se ve: un diagrama de arquitectura o de secuencia no muestra atributos ni métodos.
+  Si la pregunta pide algo que este tipo no puede mostrar, responde con lo que sí puede mostrar
+  y no lo menciones en el título.
 - Escribe los textos en español.
 `.trim();
 
