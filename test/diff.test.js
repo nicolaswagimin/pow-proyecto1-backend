@@ -72,3 +72,17 @@ test('resultado ordenado por id', () => {
     ['alfa', 'zeta'],
   );
 });
+
+test('nodo modificado si cambian sus atributos o métodos', () => {
+  const antes = diagrama();
+  antes.nodes[1].methods = [{ name: 'login', parameters: [{ name: 'email', type: 'str' }], returnType: '' }];
+  const mismo = diagrama();
+  mismo.nodes[1].methods = [{ name: 'login', parameters: [{ name: 'email', type: 'str' }], returnType: '' }];
+  assert.deepEqual(resumen(calcularDiff(antes, mismo)).nodos, []);
+  const otro = diagrama();
+  otro.nodes[1].methods = [{ name: 'login', parameters: [{ name: 'correo', type: 'str' }], returnType: '' }];
+  assert.deepEqual(resumen(calcularDiff(antes, otro)).nodos, [['api', ChangeKind.MODIFIED]]);
+  const conAtributo = diagrama();
+  conAtributo.nodes[1].attributes = [{ name: 'puerto', type: 'int' }];
+  assert.deepEqual(resumen(calcularDiff(diagrama(), conAtributo)).nodos, [['api', ChangeKind.MODIFIED]]);
+});
