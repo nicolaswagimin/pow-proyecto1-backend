@@ -6,6 +6,14 @@ import { ChangeKind, DiagramDiffSchema } from '../gen/codetodiagram/v1/diagram_p
 
 const CAMPOS_NODO = ['name', 'category', 'technology', 'description'];
 
+// Firma de los atributos y métodos de una clase, para compararlos de una sola vez.
+function miembros(nodo) {
+  return JSON.stringify([
+    (nodo.attributes ?? []).map((a) => [a.name, a.type]),
+    (nodo.methods ?? []).map((m) => [m.name, m.parameters.map((p) => [p.name, p.type]), m.returnType]),
+  ]);
+}
+
 export function calcularDiff(antes, despues) {
   return create(DiagramDiffSchema, {
     nodes: ordenar(diffNodos(antes.nodes, despues.nodes)),
@@ -21,7 +29,10 @@ function diffNodos(antes, despues) {
   for (const nodo of despues) {
     const previo = previos.get(nodo.id);
     if (!previo) cambios.push({ id: nodo.id, kind: ChangeKind.ADDED });
-    else if (CAMPOS_NODO.some((campo) => previo[campo] !== nodo[campo])) {
+    else if (
+      CAMPOS_NODO.some((campo) => previo[campo] !== nodo[campo]) ||
+      miembros(previo) !== miembros(nodo)
+    ) {
       cambios.push({ id: nodo.id, kind: ChangeKind.MODIFIED });
     }
   }
