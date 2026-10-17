@@ -2,7 +2,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [Sin publicar] · 2026-10-15
+## [Sin publicar] · 2026-10-17 (ronda 2)
+
+### Agregado
+- Tipo de diagrama **Clases**: `DIAGRAM_TYPE_CLASS`, atributos (`Attribute`) y métodos (`Method`, `Parameter`) en cada nodo, validados (como mucho 12 de cada uno, solo en clases), en el prompt y en el diff.
+- Verificación de fidelidad (`verificar.js`): nodos, atributos y métodos que no aparecen en el código provocan un reintento; si persisten, los nodos se marcan con `not_in_code` y los miembros se quitan.
+- El título y la descripción no pueden prometer atributos o métodos fuera de Clases: reintento y, si persiste, título neutro.
+
+### Cambiado
+- Prompt reforzado: solo elementos presentes en el código y con su nombre exacto.
+
+## 2026-10-15
 
 ### Agregado
 - Servicio de diagramas por gRPC con Connect (`DiagramService`): `GenerateDiagram`, `StreamDiagram` (progreso, diagrama y diff), `SaveDiagram`, `ListDiagrams`, `GetDiagram` y `DeleteDiagram`.
