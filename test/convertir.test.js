@@ -37,3 +37,24 @@ test('en arquitectura no incluye orden al volver a JSON', () => {
   const vuelta = protoAJson(jsonAProto(arq));
   assert.equal('orden' in vuelta.conexiones[0], false);
 });
+
+test('ida y vuelta de un diagrama de clases conserva atributos y métodos', () => {
+  const clases = validarDiagrama({
+    tipo: 'clases',
+    titulo: 'Armas',
+    nodos: [
+      {
+        id: 'arma',
+        nombre: 'Arma',
+        categoria: 'componente',
+        atributos: [{ nombre: 'bonus_ataque', tipo: 'int' }],
+        metodos: [{ nombre: 'calcular_danio_extra', parametros: [{ nombre: 'turno', tipo: 'int' }], retorno: 'int' }],
+      },
+    ],
+  }).diagrama;
+  const proto = jsonAProto(clases);
+  assert.equal(proto.type, DiagramType.CLASS);
+  assert.equal(proto.nodes[0].methods[0].returnType, 'int');
+  assert.equal(proto.nodes[0].methods[0].parameters[0].name, 'turno');
+  assert.deepEqual(protoAJson(proto), clases);
+});
