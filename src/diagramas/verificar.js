@@ -56,3 +56,17 @@ function respaldado(texto, indice, { quitarGenericas = false } = {}) {
   const lista = palabras(texto).filter((p) => !quitarGenericas || !GENERICAS.has(p));
   return lista.length > 0 && lista.every((p) => aparece(p, indice));
 }
+
+// Nodos (del JSON de Gemini) que no aparecen en el código: [{ id, nombre }].
+export function nodosSinRespaldo(diagrama, archivos) {
+  const indice = indiceDelCodigo(archivos);
+  return diagrama.nodos
+    .filter((nodo) => nodo.categoria !== 'persona')
+    .filter(
+      (nodo) =>
+        !respaldado(nodo.nombre, indice) &&
+        !respaldado(nodo.id, indice) &&
+        !respaldado(nodo.tecnologia ?? '', indice, { quitarGenericas: true }),
+    )
+    .map(({ id, nombre }) => ({ id, nombre }));
+}
