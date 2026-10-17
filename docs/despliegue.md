@@ -30,7 +30,7 @@ Crea una en <https://aistudio.google.com/apikey>. Puede ser la misma para los tr
 | `JWT_SECRET` | Un secreto nuevo (no el de local), generado con `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` |
 | `FRONTEND_URL` | La URL de Vercel sin `/` final; puedes sumar las locales: `https://pow-proyecto1.vercel.app,http://localhost:4200,http://localhost:4201` |
 | `JWT_EXPIRES_IN` | Opcional (`7d` por defecto) |
-| `GEMINI_MODEL` | Opcional (`gemini-2.5-flash` por defecto) |
+| `GEMINI_MODEL` | Opcional (`gemini-2.5-flash` por defecto). Recomendado: `gemini-3.5-flash-lite`, porque `gemini-2.5-flash` respondió "high demand" durante horas en la verificación y `gemini-2.5-flash-lite` ya no está disponible para cuentas nuevas |
 
 No definas `PORT`: Render lo asigna.
 
@@ -63,6 +63,7 @@ Render termina TLS en su proxy. Probado el 2026-10-16 después del despliegue:
 | `/api/health` responde `"ia": false` | Falta `GEMINI_API_KEY` |
 | El frontend dice "No hay conexión con el backend" pero `/api/health` funciona en el navegador | El origen de Vercel no está en `FRONTEND_URL` (CORS) |
 | La primera petición tarda unos 50 s | El plan gratuito de Render duerme el servicio tras un rato sin uso; el frontend avisa "El servidor está despertando" y reintenta 3 veces |
+| Al generar aparece "No se pudo consultar a la IA: This model is currently experiencing high demand" | El modelo de Gemini está saturado: cambia `GEMINI_MODEL` (por ejemplo a `gemini-3.5-flash-lite`) y Render redespliega solo |
 | El diagrama falla con un error de CORS en la consola | El origen del frontend no está en `FRONTEND_URL` (las rutas gRPC usan la misma lista) |
 
 ## En local
