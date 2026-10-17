@@ -110,9 +110,19 @@ Con `grpcurl` (si lo tienes instalado): `grpcurl -plaintext -import-path proto -
 
 ## En Render
 
-El proxy de Render reenvía las peticiones a la app por HTTP/1.1. Por eso, en producción se espera que:
+Verificado el 2026-10-16 contra `https://pow-proyecto1-backend.onrender.com`, después del despliegue:
 
-- **gRPC-Web funcione**, unario y streaming. Es lo que usa el frontend.
-- **gRPC puro no llegue**: el proxy no reenvía HTTP/2 sin TLS. gRPC puro se demuestra en local.
+| Protocolo | Resultado |
+|---|---|
+| gRPC-Web, unario (`ListDiagrams`) | Funciona |
+| gRPC-Web, streaming (`StreamDiagram`) | Funciona: los eventos de progreso llegan a medida que ocurren |
+| gRPC puro (`buf curl --protocol grpc`) | Funciona |
 
-El resultado real de la prueba en Render está en [despliegue.md](despliegue.md).
+En Render no hace falta `--http2-prior-knowledge`: la conexión va por HTTPS y HTTP/2 se negocia con TLS.
+
+```bash
+npx buf curl --protocol grpc --schema proto -H "authorization: Bearer $TOKEN" \
+  https://pow-proyecto1-backend.onrender.com/codetodiagram.v1.DiagramService/ListDiagrams -d '{}'
+```
+
+Ver [despliegue.md](despliegue.md).
