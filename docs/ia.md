@@ -62,7 +62,8 @@ Cuando el usuario edita el código, el frontend manda el diagrama que ya está d
 }
 ```
 
-- `tipo`: `arquitectura` o `secuencia`.
+- `tipo`: `arquitectura`, `secuencia` o `clases`.
+- `atributos` y `metodos` (solo en `clases`): `atributos: [{ "nombre", "tipo" }]` y `metodos: [{ "nombre", "parametros": [{ "nombre", "tipo" }], "retorno" }]`, como mucho 12 de cada uno por clase. El tipo y el retorno quedan vacíos si el código no los declara. La herencia va de la clase hija a la madre con la etiqueta `hereda`.
 - `categoria`: `persona`, `componente`, `contenedor`, `base-datos` o `externo` (las formas C4 que dibuja el frontend).
 - `orden`: obligatorio (1, 2, 3…) en secuencia; se omite en arquitectura.
 
@@ -82,7 +83,19 @@ Cuando el usuario edita el código, el frontend manda el diagrama que ya está d
 | Autoconexión | `La conexión "c3" une el nodo "api" consigo mismo.` |
 | Secuencia sin orden | `En un diagrama de secuencia, la conexión "c2" necesita un orden (1 o más).` |
 
-Además, `generarDiagrama` rechaza un diagrama de un tipo distinto al pedido.
+Además, `generarDiagrama` rechaza un diagrama de un tipo distinto al pedido, y atributos o métodos fuera del tipo `clases` (`El nodo "x" tiene atributos o métodos, pero solo un diagrama de clases los muestra.`).
+
+## Fidelidad al código
+
+Gemini a veces agrega piezas que el código no tiene. Caso real: en un simulador de combate en Python sin persistencia, agregó un nodo "Base de Datos [SQL]" con una conexión "persiste". Hay tres defensas:
+
+1. **Prompt**: usar solo elementos que el código define, importa o llama, con su nombre exacto; nada de bases de datos, cachés, colas ni servicios que el código no use.
+2. **Verificación** (`src/diagramas/verificar.js`): un nodo está respaldado si todas las palabras significativas de su nombre, de su id o de su tecnología aparecen en el código (identificadores y textos, sin comentarios ni docstrings). Se separan camelCase y snake_case, se quitan tildes y palabras como "de" o "y", y hay alias para tecnologías que se escriben distinto en el código (`PostgreSQL` → `pg`, `MongoDB` → `mongoose`…). Las personas quedan exentas. Atributos y métodos se verifican igual.
+3. **Reintento y corrección**: si en el primer intento hay nodos, atributos o métodos sin respaldo, se reintenta con esos errores (`El nodo "base-datos" (Base de Datos) no aparece en el código: quítalo…`). Si en el segundo intento siguen, los atributos y métodos se quitan y los nodos **se marcan** (`not_in_code` en el `.proto`): la interfaz los muestra con la insignia "no está en el código". Se marcan en vez de borrarlos porque la verificación es una heurística y borrar un nodo real sería peor.
+
+## Título fiel al tipo
+
+El título y la descripción describen solo lo que el diagrama dibuja. Si el tipo no es `clases` y hablan de atributos o métodos, el primer intento se rechaza (`…un diagrama de arquitectura no los muestra…`) y se reintenta. Si el segundo intento insiste, el título pasa a ser neutro (`Diagrama de arquitectura`).
 
 Si la primera respuesta no pasa, se reintenta **una sola vez** agregando al prompt la lista de errores. Si la segunda tampoco pasa, el servicio responde `internal` con `La IA devolvió un diagrama inválido dos veces. Intenta reformular la pregunta o reducir el código.` Nunca se devuelve un diagrama a medias.
 
