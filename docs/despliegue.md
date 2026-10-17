@@ -47,12 +47,12 @@ Cada `git push` a `main` vuelve a desplegar el servicio. Antes de hacer push con
 
 Cuando Vercel te dé la URL del frontend, ponla en `FRONTEND_URL` y guarda. Render vuelve a desplegar solo.
 
-## gRPC detrás del proxy de Render
+## gRPC en Render
 
-Render termina TLS en su proxy y reenvía a la app por HTTP/1.1:
+Render termina TLS en su proxy. Probado el 2026-10-16 después del despliegue:
 
-- **gRPC-Web** (lo que usa el frontend) viaja sobre HTTP/1.1, así que funciona, también el streaming de `StreamDiagram`.
-- **gRPC puro** necesita HTTP/2 de punta a punta y no llega a la app a través del proxy. Se demuestra en local con `buf curl --protocol grpc --http2-prior-knowledge` (ver [grpc.md](grpc.md)).
+- **gRPC-Web** (lo que usa el frontend) funciona, también el streaming de `StreamDiagram`.
+- **gRPC puro** también funciona contra la URL `https://`, por ejemplo con `buf curl --protocol grpc` (sin `--http2-prior-knowledge`: HTTP/2 se negocia con TLS). Los comandos están en [grpc.md](grpc.md#en-render).
 
 ## Comprobaciones
 
