@@ -78,6 +78,8 @@ message Node {
   // Solo en diagramas de clases.
   repeated Attribute attributes = 7;
   repeated Method methods = 8;
+  // El servidor no encontró este elemento en el código: probablemente la IA lo inventó.
+  bool not_in_code = 9;
 }
 
 message Edge {
