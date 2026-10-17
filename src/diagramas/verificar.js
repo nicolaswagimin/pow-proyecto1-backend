@@ -70,3 +70,16 @@ export function nodosSinRespaldo(diagrama, archivos) {
     )
     .map(({ id, nombre }) => ({ id, nombre }));
 }
+
+// Atributos y métodos que no aparecen en el código: [{ nodo, tipo, nombre }].
+export function miembrosSinRespaldo(diagrama, archivos) {
+  const indice = indiceDelCodigo(archivos);
+  return diagrama.nodos.flatMap((nodo) => [
+    ...(nodo.atributos ?? [])
+      .filter((a) => !respaldado(a.nombre, indice))
+      .map((a) => ({ nodo: nodo.id, tipo: 'atributo', nombre: a.nombre })),
+    ...(nodo.metodos ?? [])
+      .filter((m) => !respaldado(m.nombre, indice))
+      .map((m) => ({ nodo: nodo.id, tipo: 'metodo', nombre: m.nombre })),
+  ]);
+}
