@@ -70,6 +70,13 @@ npx buf curl --protocol grpc --http2-prior-knowledge --schema proto \
   http://localhost:3001/codetodiagram.v1.DiagramService/ListDiagrams -d '{}'
 ```
 
+En producción también funciona gRPC puro, por HTTPS:
+
+```bash
+npx buf curl --protocol grpc --schema proto -H "authorization: Bearer $TOKEN" \
+  https://pow-proyecto1-backend.onrender.com/codetodiagram.v1.DiagramService/ListDiagrams -d '{}'
+```
+
 Más ejemplos y el detalle de errores en [docs/grpc.md](docs/grpc.md).
 
 ## Documentación
