@@ -14,7 +14,8 @@ import { llamarGeminiJson } from '../src/ia.js';
 
 // Todas las pruebas usan un Gemini falso: nunca se consume la cuota real.
 
-const archivos = [{ name: 'index.js', content: "app.get('/api/health', ...)" }];
+// Código donde existen los nodos del diagrama válido (web y api).
+const archivos = [{ name: 'index.js', content: "const web = cliente();\napp.get('/api/health', responder);" }];
 
 const valido = JSON.stringify({
   tipo: 'arquitectura',
@@ -169,4 +170,84 @@ test('llamarGeminiJson corta si Gemini no responde a tiempo', async () => {
     assert.match(err.rawMessage, /tardó demasiado/);
     return true;
   });
+});
+
+// ---------- Fidelidad al código ----------
+
+const conInventado = JSON.stringify({
+  tipo: 'arquitectura',
+  titulo: 'API',
+  nodos: [
+    { id: 'web', nombre: 'Web', categoria: 'contenedor' },
+    { id: 'api', nombre: 'API', categoria: 'contenedor' },
+    { id: 'base-datos', nombre: 'Base de Datos', categoria: 'base-datos', tecnologia: 'SQL' },
+  ],
+  conexiones: [
+    { id: 'c1', de: 'web', a: 'api' },
+    { id: 'c2', de: 'api', a: 'base-datos', etiqueta: 'persiste' },
+  ],
+});
+
+test('reintenta pidiendo quitar un nodo que no aparece en el código', async () => {
+  const { llamar, llamadas } = geminiFalso([conInventado, valido]);
+  const diagrama = await generarDiagrama(entrada, { llamar });
+  assert.equal(llamadas.length, 2);
+  assert.match(llamadas[1].usuario, /"base-datos" \(Base de Datos\) no aparece en el código/);
+  assert.deepEqual(diagrama.nodes.map((n) => n.id), ['web', 'api']);
+});
+
+test('si el nodo inventado sigue tras el reintento, se marca notInCode', async () => {
+  const { llamar } = geminiFalso([conInventado, conInventado]);
+  const diagrama = await generarDiagrama(entrada, { llamar });
+  const marcados = diagrama.nodes.filter((n) => n.notInCode).map((n) => n.id);
+  assert.deepEqual(marcados, ['base-datos']);
+});
+
+test('tras el reintento descarta atributos y métodos que no aparecen en el código', async () => {
+  const conMiembros = JSON.stringify({
+    tipo: 'clases',
+    titulo: 'Web',
+    nodos: [
+      {
+        id: 'web',
+        nombre: 'Web',
+        categoria: 'componente',
+        atributos: [{ nombre: 'cliente' }, { nombre: 'sesion' }],
+        metodos: [{ nombre: 'responder' }, { nombre: 'cerrar' }],
+      },
+    ],
+  });
+  const { llamar, llamadas } = geminiFalso([conMiembros, conMiembros]);
+  const diagrama = await generarDiagrama({ ...entrada, tipo: DiagramType.CLASS }, { llamar });
+  assert.match(llamadas[1].usuario, /atributo "sesion" de "web" no aparece en el código/);
+  assert.deepEqual(diagrama.nodes[0].attributes.map((a) => a.name), ['cliente']);
+  assert.deepEqual(diagrama.nodes[0].methods.map((m) => m.name), ['responder']);
+});
+
+const tituloQuePromete = JSON.stringify({ ...JSON.parse(valido), titulo: 'Arquitectura con Atributos y Métodos' });
+
+test('un título que promete atributos en arquitectura provoca un reintento', async () => {
+  const { llamar, llamadas } = geminiFalso([tituloQuePromete, valido]);
+  const diagrama = await generarDiagrama(entrada, { llamar });
+  assert.equal(llamadas.length, 2);
+  assert.match(llamadas[1].usuario, /no los muestra/);
+  assert.equal(diagrama.title, 'API');
+});
+
+test('si el título sigue prometiendo tras el reintento, se reemplaza por uno neutro', async () => {
+  const { llamar } = geminiFalso([tituloQuePromete, tituloQuePromete]);
+  const diagrama = await generarDiagrama(entrada, { llamar });
+  assert.equal(diagrama.title, 'Diagrama de arquitectura');
+});
+
+test('en un diagrama de clases el título sí puede hablar de atributos y métodos', async () => {
+  const clases = JSON.stringify({
+    tipo: 'clases',
+    titulo: 'Atributos y métodos de Web',
+    nodos: [{ id: 'web', nombre: 'Web', categoria: 'componente', metodos: [{ nombre: 'responder' }] }],
+  });
+  const { llamar, llamadas } = geminiFalso([clases]);
+  const diagrama = await generarDiagrama({ ...entrada, tipo: DiagramType.CLASS }, { llamar });
+  assert.equal(llamadas.length, 1);
+  assert.equal(diagrama.title, 'Atributos y métodos de Web');
 });
