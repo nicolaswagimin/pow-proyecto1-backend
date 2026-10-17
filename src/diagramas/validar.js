@@ -4,7 +4,8 @@ import { esquemaDiagrama } from './esquema.js';
 // no se usa. Devuelve todos los errores juntos para poder pasárselos a Gemini en el reintento.
 
 export const MAX_NODOS = 12;
-export const TIPOS = ['arquitectura', 'secuencia'];
+export const TIPOS = ['arquitectura', 'secuencia', 'clases'];
+export const MAX_MIEMBROS = 12;
 export const CATEGORIAS = ['persona', 'componente', 'contenedor', 'base-datos', 'externo'];
 
 export function validarDiagrama(valor) {
@@ -24,6 +25,7 @@ export function validarDiagrama(valor) {
     ...revisarIds(diagrama),
     ...revisarConexiones(diagrama),
     ...revisarOrden(diagrama),
+    ...revisarMiembros(diagrama),
   ];
   return errores.length ? { ok: false, errores } : { ok: true, diagrama };
 }
@@ -102,4 +104,25 @@ function revisarOrden(diagrama) {
       (conexion) =>
         `En un diagrama de secuencia, la conexión "${conexion.id}" necesita un orden (1 o más).`,
     );
+}
+
+// Atributos y métodos solo tienen sentido (y solo se dibujan) en un diagrama de clases.
+function revisarMiembros(diagrama) {
+  const errores = [];
+  for (const nodo of diagrama.nodos) {
+    const tieneMiembros = nodo.atributos.length > 0 || nodo.metodos.length > 0;
+    if (tieneMiembros && diagrama.tipo !== 'clases') {
+      errores.push(
+        `El nodo "${nodo.id}" tiene atributos o métodos, pero solo un diagrama de clases los muestra.`,
+      );
+      continue;
+    }
+    if (nodo.atributos.length > MAX_MIEMBROS) {
+      errores.push(`El nodo "${nodo.id}" tiene más de ${MAX_MIEMBROS} atributos.`);
+    }
+    if (nodo.metodos.length > MAX_MIEMBROS) {
+      errores.push(`El nodo "${nodo.id}" tiene más de ${MAX_MIEMBROS} métodos.`);
+    }
+  }
+  return errores;
 }
