@@ -7,6 +7,7 @@ import { DiagramSchema, DiagramType, NodeCategory } from '../gen/codetodiagram/v
 const TIPOS = {
   arquitectura: DiagramType.ARCHITECTURE,
   secuencia: DiagramType.SEQUENCE,
+  clases: DiagramType.CLASS,
 };
 
 const CATEGORIAS = {
@@ -37,6 +38,12 @@ export function jsonAProto(diagrama) {
       technology: nodo.tecnologia,
       description: nodo.descripcion,
       file: nodo.archivo,
+      attributes: nodo.atributos.map(({ nombre, tipo }) => ({ name: nombre, type: tipo })),
+      methods: nodo.metodos.map((metodo) => ({
+        name: metodo.nombre,
+        parameters: metodo.parametros.map(({ nombre, tipo }) => ({ name: nombre, type: tipo })),
+        returnType: metodo.retorno,
+      })),
     })),
     edges: diagrama.conexiones.map((conexion) => ({
       id: conexion.id,
@@ -62,6 +69,12 @@ export function protoAJson(diagrama) {
       tecnologia: nodo.technology,
       descripcion: nodo.description,
       archivo: nodo.file,
+      atributos: nodo.attributes.map(({ name, type }) => ({ nombre: name, tipo: type })),
+      metodos: nodo.methods.map((metodo) => ({
+        nombre: metodo.name,
+        parametros: metodo.parameters.map(({ name, type }) => ({ nombre: name, tipo: type })),
+        retorno: metodo.returnType,
+      })),
     })),
     conexiones: diagrama.edges.map((arista) => ({
       id: arista.id,
