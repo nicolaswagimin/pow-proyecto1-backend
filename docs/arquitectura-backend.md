@@ -23,7 +23,8 @@ src/
     contexto.js            clave de contexto USUARIO
   diagramas/
     prompt.js              instrucciones y prompt para Gemini
-    generar.js             llama, valida y reintenta una vez
+    generar.js             llama, valida, verifica fidelidad y reintenta una vez
+    verificar.js           ¿cada nodo, atributo y método aparece en el código?
     esquema.js, validar.js validación del JSON de Gemini (Zod + reglas propias)
     convertir.js           JSON de Gemini ↔ mensajes del proto
     diff.js                diff entre dos versiones de un diagrama
@@ -35,6 +36,7 @@ src/
   routes/
     auth.js                /registro, /login y /yo
 test/                      pruebas con node:test (Gemini y base de datos simulados)
+  fixtures/                código real usado en las pruebas (el simulador donde la IA inventó una base de datos)
 ```
 
 ## Cómo se reparte una petición
