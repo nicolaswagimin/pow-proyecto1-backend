@@ -7,7 +7,7 @@ export const MAX_ARCHIVOS = 10;
 export const MAX_CARACTERES = 60_000;
 export const MAX_PREGUNTA = 300;
 
-const TIPOS_SOPORTADOS = new Set([DiagramType.ARCHITECTURE, DiagramType.SEQUENCE]);
+const TIPOS_SOPORTADOS = new Set([DiagramType.ARCHITECTURE, DiagramType.SEQUENCE, DiagramType.CLASS]);
 
 export function validarEntrada({ files, type, question = '' }) {
   const invalido = (mensaje) => {

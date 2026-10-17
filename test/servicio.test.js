@@ -58,6 +58,10 @@ test('validarEntrada acepta una entrada normal', () => {
   validarEntrada(entrada);
 });
 
+test('validarEntrada acepta el tipo Clases', () => {
+  validarEntrada({ ...entrada, type: DiagramType.CLASS });
+});
+
 test('validarEntrada exige al menos un archivo', () => {
   assert.equal(mensajeDe(() => validarEntrada({ ...entrada, files: [] })), 'Agrega al menos un archivo.');
 });
