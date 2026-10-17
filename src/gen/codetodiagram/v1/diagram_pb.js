@@ -12,7 +12,7 @@ import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
  * Describes the file codetodiagram/v1/diagram.proto.
  */
 export const file_codetodiagram_v1_diagram = /*@__PURE__*/
-  fileDesc("Ch5jb2RldG9kaWFncmFtL3YxL2RpYWdyYW0ucHJvdG8SEGNvZGV0b2RpYWdyYW0udjEiKwoKU291cmNlRmlsZRIMCgRuYW1lGAEgASgJEg8KB2NvbnRlbnQYAiABKAkiiQEKBE5vZGUSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIwCghjYXRlZ29yeRgDIAEoDjIeLmNvZGV0b2RpYWdyYW0udjEuTm9kZUNhdGVnb3J5EhIKCnRlY2hub2xvZ3kYBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSDAoEZmlsZRgGIAEoCSJKCgRFZGdlEgoKAmlkGAEgASgJEgwKBGZyb20YAiABKAkSCgoCdG8YAyABKAkSDQoFbGFiZWwYBCABKAkSDQoFb3JkZXIYBSABKAUiqAEKB0RpYWdyYW0SKwoEdHlwZRgBIAEoDjIdLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbVR5cGUSDQoFdGl0bGUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSJQoFbm9kZXMYBCADKAsyFi5jb2RldG9kaWFncmFtLnYxLk5vZGUSJQoFZWRnZXMYBSADKAsyFi5jb2RldG9kaWFncmFtLnYxLkVkZ2UiQAoGQ2hhbmdlEgoKAmlkGAEgASgJEioKBGtpbmQYAiABKA4yHC5jb2RldG9kaWFncmFtLnYxLkNoYW5nZUtpbmQiXwoLRGlhZ3JhbURpZmYSJwoFbm9kZXMYASADKAsyGC5jb2RldG9kaWFncmFtLnYxLkNoYW5nZRInCgVlZGdlcxgCIAMoCzIYLmNvZGV0b2RpYWdyYW0udjEuQ2hhbmdlIksKCFByb2dyZXNzEi4KBXN0YWdlGAEgASgOMh8uY29kZXRvZGlhZ3JhbS52MS5Qcm9ncmVzc1N0YWdlEg8KB21lc3NhZ2UYAiABKAkiwwEKFkdlbmVyYXRlRGlhZ3JhbVJlcXVlc3QSKwoFZmlsZXMYASADKAsyHC5jb2RldG9kaWFncmFtLnYxLlNvdXJjZUZpbGUSKwoEdHlwZRgCIAEoDjIdLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbVR5cGUSEAoIcXVlc3Rpb24YAyABKAkSMAoIcHJldmlvdXMYBCABKAsyGS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW1IAIgBAUILCglfcHJldmlvdXMiRQoXR2VuZXJhdGVEaWFncmFtUmVzcG9uc2USKgoHZGlhZ3JhbRgBIAEoCzIZLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbSLBAQoUU3RyZWFtRGlhZ3JhbVJlcXVlc3QSKwoFZmlsZXMYASADKAsyHC5jb2RldG9kaWFncmFtLnYxLlNvdXJjZUZpbGUSKwoEdHlwZRgCIAEoDjIdLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbVR5cGUSEAoIcXVlc3Rpb24YAyABKAkSMAoIcHJldmlvdXMYBCABKAsyGS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW1IAIgBAUILCglfcHJldmlvdXMirQEKFVN0cmVhbURpYWdyYW1SZXNwb25zZRIuCghwcm9ncmVzcxgBIAEoCzIaLmNvZGV0b2RpYWdyYW0udjEuUHJvZ3Jlc3NIABIsCgdkaWFncmFtGAIgASgLMhkuY29kZXRvZGlhZ3JhbS52MS5EaWFncmFtSAASLQoEZGlmZhgDIAEoCzIdLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbURpZmZIAEIHCgVldmVudCKzAQoTU2F2ZWREaWFncmFtU3VtbWFyeRIKCgJpZBgBIAEoBRINCgV0aXRsZRgCIAEoCRIrCgR0eXBlGAMgASgOMh0uY29kZXRvZGlhZ3JhbS52MS5EaWFncmFtVHlwZRIQCghxdWVzdGlvbhgEIAEoCRISCgpub2RlX2NvdW50GAUgASgFEi4KCmNyZWF0ZWRfYXQYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIsQBCgxTYXZlZERpYWdyYW0SCgoCaWQYASABKAUSDQoFdGl0bGUYAiABKAkSEAoIcXVlc3Rpb24YAyABKAkSKwoFZmlsZXMYBCADKAsyHC5jb2RldG9kaWFncmFtLnYxLlNvdXJjZUZpbGUSKgoHZGlhZ3JhbRgFIAEoCzIZLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbRIuCgpjcmVhdGVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKOAQoSU2F2ZURpYWdyYW1SZXF1ZXN0Eg0KBXRpdGxlGAEgASgJEhAKCHF1ZXN0aW9uGAIgASgJEisKBWZpbGVzGAMgAygLMhwuY29kZXRvZGlhZ3JhbS52MS5Tb3VyY2VGaWxlEioKB2RpYWdyYW0YBCABKAsyGS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW0iTQoTU2F2ZURpYWdyYW1SZXNwb25zZRI2CgdkaWFncmFtGAEgASgLMiUuY29kZXRvZGlhZ3JhbS52MS5TYXZlZERpYWdyYW1TdW1tYXJ5IhUKE0xpc3REaWFncmFtc1JlcXVlc3QiTwoUTGlzdERpYWdyYW1zUmVzcG9uc2USNwoIZGlhZ3JhbXMYASADKAsyJS5jb2RldG9kaWFncmFtLnYxLlNhdmVkRGlhZ3JhbVN1bW1hcnkiHwoRR2V0RGlhZ3JhbVJlcXVlc3QSCgoCaWQYASABKAUiRQoSR2V0RGlhZ3JhbVJlc3BvbnNlEi8KB2RpYWdyYW0YASABKAsyHi5jb2RldG9kaWFncmFtLnYxLlNhdmVkRGlhZ3JhbSIiChREZWxldGVEaWFncmFtUmVxdWVzdBIKCgJpZBgBIAEoBSIXChVEZWxldGVEaWFncmFtUmVzcG9uc2UqZQoLRGlhZ3JhbVR5cGUSHAoYRElBR1JBTV9UWVBFX1VOU1BFQ0lGSUVEEAASHQoZRElBR1JBTV9UWVBFX0FSQ0hJVEVDVFVSRRABEhkKFURJQUdSQU1fVFlQRV9TRVFVRU5DRRACKrkBCgxOb2RlQ2F0ZWdvcnkSHQoZTk9ERV9DQVRFR09SWV9VTlNQRUNJRklFRBAAEhgKFE5PREVfQ0FURUdPUllfUEVSU09OEAESGwoXTk9ERV9DQVRFR09SWV9DT01QT05FTlQQAhIbChdOT0RFX0NBVEVHT1JZX0NPTlRBSU5FUhADEhoKFk5PREVfQ0FURUdPUllfREFUQUJBU0UQBBIaChZOT0RFX0NBVEVHT1JZX0VYVEVSTkFMEAUqcwoKQ2hhbmdlS2luZBIbChdDSEFOR0VfS0lORF9VTlNQRUNJRklFRBAAEhUKEUNIQU5HRV9LSU5EX0FEREVEEAESFwoTQ0hBTkdFX0tJTkRfUkVNT1ZFRBACEhgKFENIQU5HRV9LSU5EX01PRElGSUVEEAMqogEKDVByb2dyZXNzU3RhZ2USHgoaUFJPR1JFU1NfU1RBR0VfVU5TUEVDSUZJRUQQABIcChhQUk9HUkVTU19TVEFHRV9BTkFMWVpJTkcQARIdChlQUk9HUkVTU19TVEFHRV9WQUxJREFUSU5HEAISGwoXUFJPR1JFU1NfU1RBR0VfUkVUUllJTkcQAxIXChNQUk9HUkVTU19TVEFHRV9ET05FEAQy0gQKDkRpYWdyYW1TZXJ2aWNlEmYKD0dlbmVyYXRlRGlhZ3JhbRIoLmNvZGV0b2RpYWdyYW0udjEuR2VuZXJhdGVEaWFncmFtUmVxdWVzdBopLmNvZGV0b2RpYWdyYW0udjEuR2VuZXJhdGVEaWFncmFtUmVzcG9uc2USYgoNU3RyZWFtRGlhZ3JhbRImLmNvZGV0b2RpYWdyYW0udjEuU3RyZWFtRGlhZ3JhbVJlcXVlc3QaJy5jb2RldG9kaWFncmFtLnYxLlN0cmVhbURpYWdyYW1SZXNwb25zZTABEloKC1NhdmVEaWFncmFtEiQuY29kZXRvZGlhZ3JhbS52MS5TYXZlRGlhZ3JhbVJlcXVlc3QaJS5jb2RldG9kaWFncmFtLnYxLlNhdmVEaWFncmFtUmVzcG9uc2USXQoMTGlzdERpYWdyYW1zEiUuY29kZXRvZGlhZ3JhbS52MS5MaXN0RGlhZ3JhbXNSZXF1ZXN0GiYuY29kZXRvZGlhZ3JhbS52MS5MaXN0RGlhZ3JhbXNSZXNwb25zZRJXCgpHZXREaWFncmFtEiMuY29kZXRvZGlhZ3JhbS52MS5HZXREaWFncmFtUmVxdWVzdBokLmNvZGV0b2RpYWdyYW0udjEuR2V0RGlhZ3JhbVJlc3BvbnNlEmAKDURlbGV0ZURpYWdyYW0SJi5jb2RldG9kaWFncmFtLnYxLkRlbGV0ZURpYWdyYW1SZXF1ZXN0GicuY29kZXRvZGlhZ3JhbS52MS5EZWxldGVEaWFncmFtUmVzcG9uc2ViBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("Ch5jb2RldG9kaWFncmFtL3YxL2RpYWdyYW0ucHJvdG8SEGNvZGV0b2RpYWdyYW0udjEiKwoKU291cmNlRmlsZRIMCgRuYW1lGAEgASgJEg8KB2NvbnRlbnQYAiABKAkiJwoJQXR0cmlidXRlEgwKBG5hbWUYASABKAkSDAoEdHlwZRgCIAEoCSInCglQYXJhbWV0ZXISDAoEbmFtZRgBIAEoCRIMCgR0eXBlGAIgASgJIlwKBk1ldGhvZBIMCgRuYW1lGAEgASgJEi8KCnBhcmFtZXRlcnMYAiADKAsyGy5jb2RldG9kaWFncmFtLnYxLlBhcmFtZXRlchITCgtyZXR1cm5fdHlwZRgDIAEoCSL6AQoETm9kZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEjAKCGNhdGVnb3J5GAMgASgOMh4uY29kZXRvZGlhZ3JhbS52MS5Ob2RlQ2F0ZWdvcnkSEgoKdGVjaG5vbG9neRgEIAEoCRITCgtkZXNjcmlwdGlvbhgFIAEoCRIMCgRmaWxlGAYgASgJEi8KCmF0dHJpYnV0ZXMYByADKAsyGy5jb2RldG9kaWFncmFtLnYxLkF0dHJpYnV0ZRIpCgdtZXRob2RzGAggAygLMhguY29kZXRvZGlhZ3JhbS52MS5NZXRob2QSEwoLbm90X2luX2NvZGUYCSABKAgiSgoERWRnZRIKCgJpZBgBIAEoCRIMCgRmcm9tGAIgASgJEgoKAnRvGAMgASgJEg0KBWxhYmVsGAQgASgJEg0KBW9yZGVyGAUgASgFIqgBCgdEaWFncmFtEisKBHR5cGUYASABKA4yHS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW1UeXBlEg0KBXRpdGxlGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEiUKBW5vZGVzGAQgAygLMhYuY29kZXRvZGlhZ3JhbS52MS5Ob2RlEiUKBWVkZ2VzGAUgAygLMhYuY29kZXRvZGlhZ3JhbS52MS5FZGdlIkAKBkNoYW5nZRIKCgJpZBgBIAEoCRIqCgRraW5kGAIgASgOMhwuY29kZXRvZGlhZ3JhbS52MS5DaGFuZ2VLaW5kIl8KC0RpYWdyYW1EaWZmEicKBW5vZGVzGAEgAygLMhguY29kZXRvZGlhZ3JhbS52MS5DaGFuZ2USJwoFZWRnZXMYAiADKAsyGC5jb2RldG9kaWFncmFtLnYxLkNoYW5nZSJLCghQcm9ncmVzcxIuCgVzdGFnZRgBIAEoDjIfLmNvZGV0b2RpYWdyYW0udjEuUHJvZ3Jlc3NTdGFnZRIPCgdtZXNzYWdlGAIgASgJIsMBChZHZW5lcmF0ZURpYWdyYW1SZXF1ZXN0EisKBWZpbGVzGAEgAygLMhwuY29kZXRvZGlhZ3JhbS52MS5Tb3VyY2VGaWxlEisKBHR5cGUYAiABKA4yHS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW1UeXBlEhAKCHF1ZXN0aW9uGAMgASgJEjAKCHByZXZpb3VzGAQgASgLMhkuY29kZXRvZGlhZ3JhbS52MS5EaWFncmFtSACIAQFCCwoJX3ByZXZpb3VzIkUKF0dlbmVyYXRlRGlhZ3JhbVJlc3BvbnNlEioKB2RpYWdyYW0YASABKAsyGS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW0iwQEKFFN0cmVhbURpYWdyYW1SZXF1ZXN0EisKBWZpbGVzGAEgAygLMhwuY29kZXRvZGlhZ3JhbS52MS5Tb3VyY2VGaWxlEisKBHR5cGUYAiABKA4yHS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW1UeXBlEhAKCHF1ZXN0aW9uGAMgASgJEjAKCHByZXZpb3VzGAQgASgLMhkuY29kZXRvZGlhZ3JhbS52MS5EaWFncmFtSACIAQFCCwoJX3ByZXZpb3VzIq0BChVTdHJlYW1EaWFncmFtUmVzcG9uc2USLgoIcHJvZ3Jlc3MYASABKAsyGi5jb2RldG9kaWFncmFtLnYxLlByb2dyZXNzSAASLAoHZGlhZ3JhbRgCIAEoCzIZLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbUgAEi0KBGRpZmYYAyABKAsyHS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW1EaWZmSABCBwoFZXZlbnQiswEKE1NhdmVkRGlhZ3JhbVN1bW1hcnkSCgoCaWQYASABKAUSDQoFdGl0bGUYAiABKAkSKwoEdHlwZRgDIAEoDjIdLmNvZGV0b2RpYWdyYW0udjEuRGlhZ3JhbVR5cGUSEAoIcXVlc3Rpb24YBCABKAkSEgoKbm9kZV9jb3VudBgFIAEoBRIuCgpjcmVhdGVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCLEAQoMU2F2ZWREaWFncmFtEgoKAmlkGAEgASgFEg0KBXRpdGxlGAIgASgJEhAKCHF1ZXN0aW9uGAMgASgJEisKBWZpbGVzGAQgAygLMhwuY29kZXRvZGlhZ3JhbS52MS5Tb3VyY2VGaWxlEioKB2RpYWdyYW0YBSABKAsyGS5jb2RldG9kaWFncmFtLnYxLkRpYWdyYW0SLgoKY3JlYXRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAijgEKElNhdmVEaWFncmFtUmVxdWVzdBINCgV0aXRsZRgBIAEoCRIQCghxdWVzdGlvbhgCIAEoCRIrCgVmaWxlcxgDIAMoCzIcLmNvZGV0b2RpYWdyYW0udjEuU291cmNlRmlsZRIqCgdkaWFncmFtGAQgASgLMhkuY29kZXRvZGlhZ3JhbS52MS5EaWFncmFtIk0KE1NhdmVEaWFncmFtUmVzcG9uc2USNgoHZGlhZ3JhbRgBIAEoCzIlLmNvZGV0b2RpYWdyYW0udjEuU2F2ZWREaWFncmFtU3VtbWFyeSIVChNMaXN0RGlhZ3JhbXNSZXF1ZXN0Ik8KFExpc3REaWFncmFtc1Jlc3BvbnNlEjcKCGRpYWdyYW1zGAEgAygLMiUuY29kZXRvZGlhZ3JhbS52MS5TYXZlZERpYWdyYW1TdW1tYXJ5Ih8KEUdldERpYWdyYW1SZXF1ZXN0EgoKAmlkGAEgASgFIkUKEkdldERpYWdyYW1SZXNwb25zZRIvCgdkaWFncmFtGAEgASgLMh4uY29kZXRvZGlhZ3JhbS52MS5TYXZlZERpYWdyYW0iIgoURGVsZXRlRGlhZ3JhbVJlcXVlc3QSCgoCaWQYASABKAUiFwoVRGVsZXRlRGlhZ3JhbVJlc3BvbnNlKn0KC0RpYWdyYW1UeXBlEhwKGERJQUdSQU1fVFlQRV9VTlNQRUNJRklFRBAAEh0KGURJQUdSQU1fVFlQRV9BUkNISVRFQ1RVUkUQARIZChVESUFHUkFNX1RZUEVfU0VRVUVOQ0UQAhIWChJESUFHUkFNX1RZUEVfQ0xBU1MQAyq5AQoMTm9kZUNhdGVnb3J5Eh0KGU5PREVfQ0FURUdPUllfVU5TUEVDSUZJRUQQABIYChROT0RFX0NBVEVHT1JZX1BFUlNPThABEhsKF05PREVfQ0FURUdPUllfQ09NUE9ORU5UEAISGwoXTk9ERV9DQVRFR09SWV9DT05UQUlORVIQAxIaChZOT0RFX0NBVEVHT1JZX0RBVEFCQVNFEAQSGgoWTk9ERV9DQVRFR09SWV9FWFRFUk5BTBAFKnMKCkNoYW5nZUtpbmQSGwoXQ0hBTkdFX0tJTkRfVU5TUEVDSUZJRUQQABIVChFDSEFOR0VfS0lORF9BRERFRBABEhcKE0NIQU5HRV9LSU5EX1JFTU9WRUQQAhIYChRDSEFOR0VfS0lORF9NT0RJRklFRBADKqIBCg1Qcm9ncmVzc1N0YWdlEh4KGlBST0dSRVNTX1NUQUdFX1VOU1BFQ0lGSUVEEAASHAoYUFJPR1JFU1NfU1RBR0VfQU5BTFlaSU5HEAESHQoZUFJPR1JFU1NfU1RBR0VfVkFMSURBVElORxACEhsKF1BST0dSRVNTX1NUQUdFX1JFVFJZSU5HEAMSFwoTUFJPR1JFU1NfU1RBR0VfRE9ORRAEMtIECg5EaWFncmFtU2VydmljZRJmCg9HZW5lcmF0ZURpYWdyYW0SKC5jb2RldG9kaWFncmFtLnYxLkdlbmVyYXRlRGlhZ3JhbVJlcXVlc3QaKS5jb2RldG9kaWFncmFtLnYxLkdlbmVyYXRlRGlhZ3JhbVJlc3BvbnNlEmIKDVN0cmVhbURpYWdyYW0SJi5jb2RldG9kaWFncmFtLnYxLlN0cmVhbURpYWdyYW1SZXF1ZXN0GicuY29kZXRvZGlhZ3JhbS52MS5TdHJlYW1EaWFncmFtUmVzcG9uc2UwARJaCgtTYXZlRGlhZ3JhbRIkLmNvZGV0b2RpYWdyYW0udjEuU2F2ZURpYWdyYW1SZXF1ZXN0GiUuY29kZXRvZGlhZ3JhbS52MS5TYXZlRGlhZ3JhbVJlc3BvbnNlEl0KDExpc3REaWFncmFtcxIlLmNvZGV0b2RpYWdyYW0udjEuTGlzdERpYWdyYW1zUmVxdWVzdBomLmNvZGV0b2RpYWdyYW0udjEuTGlzdERpYWdyYW1zUmVzcG9uc2USVwoKR2V0RGlhZ3JhbRIjLmNvZGV0b2RpYWdyYW0udjEuR2V0RGlhZ3JhbVJlcXVlc3QaJC5jb2RldG9kaWFncmFtLnYxLkdldERpYWdyYW1SZXNwb25zZRJgCg1EZWxldGVEaWFncmFtEiYuY29kZXRvZGlhZ3JhbS52MS5EZWxldGVEaWFncmFtUmVxdWVzdBonLmNvZGV0b2RpYWdyYW0udjEuRGVsZXRlRGlhZ3JhbVJlc3BvbnNlYgZwcm90bzM", [file_google_protobuf_timestamp]);
 
 /**
  * Describes the message codetodiagram.v1.SourceFile.
@@ -22,144 +22,165 @@ export const SourceFileSchema = /*@__PURE__*/
   messageDesc(file_codetodiagram_v1_diagram, 0);
 
 /**
+ * Describes the message codetodiagram.v1.Attribute.
+ * Use `create(AttributeSchema)` to create a new message.
+ */
+export const AttributeSchema = /*@__PURE__*/
+  messageDesc(file_codetodiagram_v1_diagram, 1);
+
+/**
+ * Describes the message codetodiagram.v1.Parameter.
+ * Use `create(ParameterSchema)` to create a new message.
+ */
+export const ParameterSchema = /*@__PURE__*/
+  messageDesc(file_codetodiagram_v1_diagram, 2);
+
+/**
+ * Describes the message codetodiagram.v1.Method.
+ * Use `create(MethodSchema)` to create a new message.
+ */
+export const MethodSchema = /*@__PURE__*/
+  messageDesc(file_codetodiagram_v1_diagram, 3);
+
+/**
  * Describes the message codetodiagram.v1.Node.
  * Use `create(NodeSchema)` to create a new message.
  */
 export const NodeSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 1);
+  messageDesc(file_codetodiagram_v1_diagram, 4);
 
 /**
  * Describes the message codetodiagram.v1.Edge.
  * Use `create(EdgeSchema)` to create a new message.
  */
 export const EdgeSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 2);
+  messageDesc(file_codetodiagram_v1_diagram, 5);
 
 /**
  * Describes the message codetodiagram.v1.Diagram.
  * Use `create(DiagramSchema)` to create a new message.
  */
 export const DiagramSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 3);
+  messageDesc(file_codetodiagram_v1_diagram, 6);
 
 /**
  * Describes the message codetodiagram.v1.Change.
  * Use `create(ChangeSchema)` to create a new message.
  */
 export const ChangeSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 4);
+  messageDesc(file_codetodiagram_v1_diagram, 7);
 
 /**
  * Describes the message codetodiagram.v1.DiagramDiff.
  * Use `create(DiagramDiffSchema)` to create a new message.
  */
 export const DiagramDiffSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 5);
+  messageDesc(file_codetodiagram_v1_diagram, 8);
 
 /**
  * Describes the message codetodiagram.v1.Progress.
  * Use `create(ProgressSchema)` to create a new message.
  */
 export const ProgressSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 6);
+  messageDesc(file_codetodiagram_v1_diagram, 9);
 
 /**
  * Describes the message codetodiagram.v1.GenerateDiagramRequest.
  * Use `create(GenerateDiagramRequestSchema)` to create a new message.
  */
 export const GenerateDiagramRequestSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 7);
+  messageDesc(file_codetodiagram_v1_diagram, 10);
 
 /**
  * Describes the message codetodiagram.v1.GenerateDiagramResponse.
  * Use `create(GenerateDiagramResponseSchema)` to create a new message.
  */
 export const GenerateDiagramResponseSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 8);
+  messageDesc(file_codetodiagram_v1_diagram, 11);
 
 /**
  * Describes the message codetodiagram.v1.StreamDiagramRequest.
  * Use `create(StreamDiagramRequestSchema)` to create a new message.
  */
 export const StreamDiagramRequestSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 9);
+  messageDesc(file_codetodiagram_v1_diagram, 12);
 
 /**
  * Describes the message codetodiagram.v1.StreamDiagramResponse.
  * Use `create(StreamDiagramResponseSchema)` to create a new message.
  */
 export const StreamDiagramResponseSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 10);
+  messageDesc(file_codetodiagram_v1_diagram, 13);
 
 /**
  * Describes the message codetodiagram.v1.SavedDiagramSummary.
  * Use `create(SavedDiagramSummarySchema)` to create a new message.
  */
 export const SavedDiagramSummarySchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 11);
+  messageDesc(file_codetodiagram_v1_diagram, 14);
 
 /**
  * Describes the message codetodiagram.v1.SavedDiagram.
  * Use `create(SavedDiagramSchema)` to create a new message.
  */
 export const SavedDiagramSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 12);
+  messageDesc(file_codetodiagram_v1_diagram, 15);
 
 /**
  * Describes the message codetodiagram.v1.SaveDiagramRequest.
  * Use `create(SaveDiagramRequestSchema)` to create a new message.
  */
 export const SaveDiagramRequestSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 13);
+  messageDesc(file_codetodiagram_v1_diagram, 16);
 
 /**
  * Describes the message codetodiagram.v1.SaveDiagramResponse.
  * Use `create(SaveDiagramResponseSchema)` to create a new message.
  */
 export const SaveDiagramResponseSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 14);
+  messageDesc(file_codetodiagram_v1_diagram, 17);
 
 /**
  * Describes the message codetodiagram.v1.ListDiagramsRequest.
  * Use `create(ListDiagramsRequestSchema)` to create a new message.
  */
 export const ListDiagramsRequestSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 15);
+  messageDesc(file_codetodiagram_v1_diagram, 18);
 
 /**
  * Describes the message codetodiagram.v1.ListDiagramsResponse.
  * Use `create(ListDiagramsResponseSchema)` to create a new message.
  */
 export const ListDiagramsResponseSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 16);
+  messageDesc(file_codetodiagram_v1_diagram, 19);
 
 /**
  * Describes the message codetodiagram.v1.GetDiagramRequest.
  * Use `create(GetDiagramRequestSchema)` to create a new message.
  */
 export const GetDiagramRequestSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 17);
+  messageDesc(file_codetodiagram_v1_diagram, 20);
 
 /**
  * Describes the message codetodiagram.v1.GetDiagramResponse.
  * Use `create(GetDiagramResponseSchema)` to create a new message.
  */
 export const GetDiagramResponseSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 18);
+  messageDesc(file_codetodiagram_v1_diagram, 21);
 
 /**
  * Describes the message codetodiagram.v1.DeleteDiagramRequest.
  * Use `create(DeleteDiagramRequestSchema)` to create a new message.
  */
 export const DeleteDiagramRequestSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 19);
+  messageDesc(file_codetodiagram_v1_diagram, 22);
 
 /**
  * Describes the message codetodiagram.v1.DeleteDiagramResponse.
  * Use `create(DeleteDiagramResponseSchema)` to create a new message.
  */
 export const DeleteDiagramResponseSchema = /*@__PURE__*/
-  messageDesc(file_codetodiagram_v1_diagram, 20);
+  messageDesc(file_codetodiagram_v1_diagram, 23);
 
 /**
  * Describes the enum codetodiagram.v1.DiagramType.

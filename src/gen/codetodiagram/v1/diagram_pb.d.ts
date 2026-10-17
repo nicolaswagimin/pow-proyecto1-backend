@@ -38,6 +38,78 @@ export declare type SourceFile = Message<"codetodiagram.v1.SourceFile"> & {
 export declare const SourceFileSchema: GenMessage<SourceFile>;
 
 /**
+ * Atributo de una clase (diagrama de clases). type queda vacío si el código no lo declara.
+ *
+ * @generated from message codetodiagram.v1.Attribute
+ */
+export declare type Attribute = Message<"codetodiagram.v1.Attribute"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string type = 2;
+   */
+  type: string;
+};
+
+/**
+ * Describes the message codetodiagram.v1.Attribute.
+ * Use `create(AttributeSchema)` to create a new message.
+ */
+export declare const AttributeSchema: GenMessage<Attribute>;
+
+/**
+ * @generated from message codetodiagram.v1.Parameter
+ */
+export declare type Parameter = Message<"codetodiagram.v1.Parameter"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string type = 2;
+   */
+  type: string;
+};
+
+/**
+ * Describes the message codetodiagram.v1.Parameter.
+ * Use `create(ParameterSchema)` to create a new message.
+ */
+export declare const ParameterSchema: GenMessage<Parameter>;
+
+/**
+ * Método de una clase con sus parámetros y su tipo de retorno (si el código lo declara).
+ *
+ * @generated from message codetodiagram.v1.Method
+ */
+export declare type Method = Message<"codetodiagram.v1.Method"> & {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: repeated codetodiagram.v1.Parameter parameters = 2;
+   */
+  parameters: Parameter[];
+
+  /**
+   * @generated from field: string return_type = 3;
+   */
+  returnType: string;
+};
+
+/**
+ * Describes the message codetodiagram.v1.Method.
+ * Use `create(MethodSchema)` to create a new message.
+ */
+export declare const MethodSchema: GenMessage<Method>;
+
+/**
  * @generated from message codetodiagram.v1.Node
  */
 export declare type Node = Message<"codetodiagram.v1.Node"> & {
@@ -72,6 +144,25 @@ export declare type Node = Message<"codetodiagram.v1.Node"> & {
    * @generated from field: string file = 6;
    */
   file: string;
+
+  /**
+   * Solo en diagramas de clases.
+   *
+   * @generated from field: repeated codetodiagram.v1.Attribute attributes = 7;
+   */
+  attributes: Attribute[];
+
+  /**
+   * @generated from field: repeated codetodiagram.v1.Method methods = 8;
+   */
+  methods: Method[];
+
+  /**
+   * El servidor no encontró este elemento en el código: probablemente la IA lo inventó.
+   *
+   * @generated from field: bool not_in_code = 9;
+   */
+  notInCode: boolean;
 };
 
 /**
@@ -581,6 +672,13 @@ export enum DiagramType {
    * @generated from enum value: DIAGRAM_TYPE_SEQUENCE = 2;
    */
   SEQUENCE = 2,
+
+  /**
+   * Diagrama de clases (UML): cada nodo lleva sus atributos y métodos.
+   *
+   * @generated from enum value: DIAGRAM_TYPE_CLASS = 3;
+   */
+  CLASS = 3,
 }
 
 /**
