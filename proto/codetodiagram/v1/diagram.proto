@@ -75,6 +75,9 @@ message Node {
   string description = 5;
   // Archivo de origen del que sale el nodo (si aplica).
   string file = 6;
+  // Solo en diagramas de clases.
+  repeated Attribute attributes = 7;
+  repeated Method methods = 8;
 }
 
 message Edge {
