@@ -39,14 +39,14 @@ Archivo: [`proto/codetodiagram/v1/diagram.proto`](../proto/codetodiagram/v1/diag
 
 | RPC | Tipo | Qué hace |
 |---|---|---|
-| `GenerateDiagram` | Unario | Archivos + tipo + pregunta opcional → diagrama validado |
+| `GenerateDiagram` | Unario | Archivos + tipo (arquitectura, secuencia o clases) + pregunta opcional → diagrama validado |
 | `StreamDiagram` | Server streaming | Lo mismo, enviando eventos `progress`, luego `diagram` y, si se mandó `previous`, `diff` |
 | `SaveDiagram` | Unario | Guarda código + diagrama en el historial (solo si el diagrama es válido) |
 | `ListDiagrams` | Unario | Historial del usuario, del más reciente al más antiguo |
 | `GetDiagram` | Unario | Un diagrama guardado con su código |
 | `DeleteDiagram` | Unario | Borra un diagrama propio |
 
-Mensajes principales: `Diagram` (`type`, `title`, `description`, `nodes`, `edges`), `Node` (`id`, `name`, `category`, `technology`, `description`, `file`), `Edge` (`id`, `from`, `to`, `label`, `order`) y `DiagramDiff` (listas de `Change { id, kind }`).
+Mensajes principales: `Diagram` (`type`, `title`, `description`, `nodes`, `edges`), `Node` (`id`, `name`, `category`, `technology`, `description`, `file` y, en diagramas de clases, `attributes` y `methods`; `not_in_code` marca un nodo que no aparece en el código), `Attribute` (`name`, `type`), `Method` (`name`, `parameters`, `return_type`), `Parameter` (`name`, `type`), `Edge` (`id`, `from`, `to`, `label`, `order`) y `DiagramDiff` (listas de `Change { id, kind }`).
 
 `previous` es el diagrama anterior (si no pasa la validación, por ejemplo por tener más de 12 nodos, se ignora): Gemini lo recibe para reutilizar los mismos `id` y que el diff no muestre cambios falsos (ver [ia.md](ia.md)).
 
