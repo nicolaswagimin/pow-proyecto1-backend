@@ -114,3 +114,60 @@ test('rechaza null y texto', () => {
   assert.deepEqual(errores(null), ['La respuesta no es un objeto JSON.']);
   assert.deepEqual(errores('hola'), ['La respuesta no es un objeto JSON.']);
 });
+
+// ---------- Diagrama de clases ----------
+
+function clases(cambios = {}) {
+  return {
+    tipo: 'clases',
+    titulo: 'Personajes',
+    nodos: [
+      {
+        id: 'personaje',
+        nombre: 'Personaje',
+        categoria: 'componente',
+        atributos: [{ nombre: 'nombre', tipo: 'str' }, { nombre: 'stats' }],
+        metodos: [
+          { nombre: 'ejecutar_turno', parametros: [{ nombre: 'objetivo', tipo: 'Personaje' }] },
+          { nombre: 'procesar_turnos_estados', retorno: 'None' },
+        ],
+      },
+      { id: 'guerrero', nombre: 'Guerrero', categoria: 'componente' },
+    ],
+    conexiones: [{ id: 'c1', de: 'guerrero', a: 'personaje', etiqueta: 'hereda' }],
+    ...cambios,
+  };
+}
+
+test('acepta un diagrama de clases con atributos y métodos', () => {
+  const resultado = validarDiagrama(clases());
+  assert.equal(resultado.ok, true);
+  assert.equal(resultado.diagrama.nodos[0].atributos[1].tipo, '');
+  assert.deepEqual(resultado.diagrama.nodos[1].metodos, []);
+});
+
+test('rechaza atributos o métodos fuera de un diagrama de clases', () => {
+  assert.ok(
+    errores(clases({ tipo: 'arquitectura' })).includes(
+      'El nodo "personaje" tiene atributos o métodos, pero solo un diagrama de clases los muestra.',
+    ),
+  );
+});
+
+test('rechaza más de 12 atributos en una clase', () => {
+  const d = clases();
+  d.nodos[0].atributos = Array.from({ length: 13 }, (_, i) => ({ nombre: `a${i}` }));
+  assert.ok(errores(d).includes('El nodo "personaje" tiene más de 12 atributos.'));
+});
+
+test('rechaza más de 12 métodos en una clase', () => {
+  const d = clases();
+  d.nodos[0].metodos = Array.from({ length: 13 }, (_, i) => ({ nombre: `m${i}` }));
+  assert.ok(errores(d).includes('El nodo "personaje" tiene más de 12 métodos.'));
+});
+
+test('rechaza un método sin nombre', () => {
+  const d = clases();
+  d.nodos[0].metodos.push({ nombre: ' ' });
+  assert.ok(errores(d).some((e) => /nombre/.test(e)));
+});
