@@ -16,4 +16,4 @@ Usar [Connect](https://connectrpc.com) (`@connectrpc/connect-node` en el backend
 - Se monta junto a Express en el mismo proceso, con Express como fallback para REST.
 - Los tipos salen del `.proto` en los dos repos (TypeScript en el frontend, JS con `.d.ts` en el backend).
 - Interceptores y errores (`ConnectError` con códigos gRPC) funcionan igual en cliente y servidor.
-- A cambio, Connect es menos conocido que `grpc-js`, y gRPC puro solo se puede demostrar donde haya HTTP/2 de punta a punta (en local; ver 0003).
+- A cambio, Connect es menos conocido que `grpc-js`. gRPC puro funciona en local (HTTP/2 sin TLS, ver 0003) y en Render por HTTPS (verificado el 2026-10-16).
