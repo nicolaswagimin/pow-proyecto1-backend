@@ -12,6 +12,8 @@ enum DiagramType {
   DIAGRAM_TYPE_UNSPECIFIED = 0;
   DIAGRAM_TYPE_ARCHITECTURE = 1;
   DIAGRAM_TYPE_SEQUENCE = 2;
+  // Diagrama de clases (UML): cada nodo lleva sus atributos y métodos.
+  DIAGRAM_TYPE_CLASS = 3;
 }
 
 // Forma C4 con la que se dibuja cada nodo.
