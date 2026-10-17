@@ -49,6 +49,24 @@ message SourceFile {
   string content = 2;
 }
 
+// Atributo de una clase (diagrama de clases). type queda vacío si el código no lo declara.
+message Attribute {
+  string name = 1;
+  string type = 2;
+}
+
+message Parameter {
+  string name = 1;
+  string type = 2;
+}
+
+// Método de una clase con sus parámetros y su tipo de retorno (si el código lo declara).
+message Method {
+  string name = 1;
+  repeated Parameter parameters = 2;
+  string return_type = 3;
+}
+
 message Node {
   string id = 1;
   string name = 2;
