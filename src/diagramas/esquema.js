@@ -6,6 +6,18 @@ import { z } from 'zod';
 
 const texto = (max) => z.string().trim().max(max);
 
+// Diagrama de clases: atributos y métodos de cada clase.
+const atributo = z.object({
+  nombre: texto(60).min(1, 'Cada atributo necesita un nombre.'),
+  tipo: texto(60).optional().default(''),
+});
+
+const metodo = z.object({
+  nombre: texto(60).min(1, 'Cada método necesita un nombre.'),
+  parametros: z.array(atributo).optional().default([]),
+  retorno: texto(60).optional().default(''),
+});
+
 const nodo = z.object({
   id: z.string(),
   nombre: texto(80).min(1, 'Cada nodo necesita un nombre.'),
@@ -13,6 +25,8 @@ const nodo = z.object({
   tecnologia: texto(80).optional().default(''),
   descripcion: texto(300).optional().default(''),
   archivo: texto(200).optional().default(''),
+  atributos: z.array(atributo).optional().default([]),
+  metodos: z.array(metodo).optional().default([]),
 });
 
 const conexion = z.object({
