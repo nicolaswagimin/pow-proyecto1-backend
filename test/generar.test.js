@@ -9,7 +9,7 @@ import {
   ProgressStage,
 } from '../src/gen/codetodiagram/v1/diagram_pb.js';
 import { extraerJson, generarDiagrama } from '../src/diagramas/generar.js';
-import { construirPrompt } from '../src/diagramas/prompt.js';
+import { INSTRUCCIONES_DIAGRAMA, construirPrompt } from '../src/diagramas/prompt.js';
 import { llamarGeminiJson } from '../src/ia.js';
 
 // Todas las pruebas usan un Gemini falso: nunca se consume la cuota real.
@@ -250,4 +250,25 @@ test('en un diagrama de clases el título sí puede hablar de atributos y métod
   const diagrama = await generarDiagrama({ ...entrada, tipo: DiagramType.CLASS }, { llamar });
   assert.equal(llamadas.length, 1);
   assert.equal(diagrama.title, 'Atributos y métodos de Web');
+});
+
+// ---------- Prompt ----------
+
+test('las instrucciones prohíben inventar bases de datos y servicios', () => {
+  assert.match(INSTRUCCIONES_DIAGRAMA, /base de datos/i);
+  assert.match(INSTRUCCIONES_DIAGRAMA, /nombre exacto/i);
+});
+
+test('las instrucciones explican el formato de atributos y métodos de clases', () => {
+  assert.match(INSTRUCCIONES_DIAGRAMA, /"atributos"/);
+  assert.match(INSTRUCCIONES_DIAGRAMA, /"metodos"/);
+});
+
+test('el título solo describe lo que el tipo dibuja', () => {
+  assert.match(INSTRUCCIONES_DIAGRAMA, /título/i);
+  assert.match(INSTRUCCIONES_DIAGRAMA, /no prometas/i);
+});
+
+test('construirPrompt indica el tipo clases', () => {
+  assert.match(construirPrompt({ ...entrada, tipo: DiagramType.CLASS }), /Tipo de diagrama: clases/);
 });
